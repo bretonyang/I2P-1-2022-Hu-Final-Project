@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Pacman" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Pacman" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="C:/allegro/lib/liballegro_monolith-debug.dll.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Pacman" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="C:/allegro/lib/liballegro_monolith.dll.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="C:/allegro/include/" />
+		</Compiler>
+		<Linker>
+			<Add directory="C:/allegro/lib/" />
+		</Linker>
+		<Unit filename="Assets/Minecraft.ttf" />
+		<Unit filename="Assets/Music/original_theme.ogg" />
+		<Unit filename="Assets/Music/pacman-chomp.ogg" />
+		<Unit filename="Assets/Music/pacman_death.ogg" />
+		<Unit filename="Assets/Music/pacman_eatfruit.ogg" />
+		<Unit filename="Assets/Music/pacman_eatghost.ogg" />
+		<Unit filename="Assets/Music/pacman_intermission.ogg" />
+		<Unit filename="Assets/OpenSans-Regular.ttf" />
+		<Unit filename="Assets/ghost_dead.png" />
+		<Unit filename="Assets/ghost_flee.png" />
+		<Unit filename="Assets/ghost_move_blue.png" />
+		<Unit filename="Assets/ghost_move_orange.png" />
+		<Unit filename="Assets/ghost_move_pink.png" />
+		<Unit filename="Assets/ghost_move_red.png" />
+		<Unit filename="Assets/map_nthu.txt" />
+		<Unit filename="Assets/pacman_die.png" />
+		<Unit filename="Assets/pacman_generalSprites.png" />
+		<Unit filename="Assets/pacman_move.png" />
+		<Unit filename="Assets/pacman_tile.png" />
+		<Unit filename="Assets/pacman_tile_cut.png" />
+		<Unit filename="Assets/settings.png" />
+		<Unit filename="Assets/settings2.png" />
+		<Unit filename="Assets/title.png" />
+		<Unit filename="Src/game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/game.h" />
+		<Unit filename="Src/ghost.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/ghost.h" />
+		<Unit filename="Src/ghost_red_move_script.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/map.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/map.h" />
+		<Unit filename="Src/pacman_obj.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/pacman_obj.h" />
+		<Unit filename="Src/scene_game.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_game.h" />
+		<Unit filename="Src/scene_menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_menu.h" />
+		<Unit filename="Src/scene_menu_object.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_menu_object.h" />
+		<Unit filename="Src/scene_settings.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_settings.h" />
+		<Unit filename="Src/shared.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/shared.h" />
+		<Unit filename="Src/utility.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/utility.h" />
+		<Extensions>
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

@@ -17,21 +17,22 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 	// [HACKATHON 2-4]
 	// Uncomment the following code and finish pacman picking random direction.
 
-	/*
 	static Directions proba[4]; // possible movement
 	int cnt = 0;
 	for (Directions i = 1; i <= 4; i++)
-		if (ghost_movable(...)) 	proba[cnt++] = i;
-	ghost_NextMove(ghost, proba[pick a reasonable random number]);
-	*/
+		if (ghost_movable(ghost, M, i, is_room_block(M, ghost->objData.Coord.x, ghost->objData.Coord.y)))
+            proba[cnt++] = i;
 
-	// [TODO] (Not in Hackathon) 
+	ghost_NextMove(ghost, proba[rand() % cnt]);
+
+
+	// [TODO] (Not in Hackathon)
 	// Description:
-	// For red(Blinky) ghost, we ask you to implement an random strategy ghost, 
+	// For red(Blinky) ghost, we ask you to implement an random strategy ghost,
 	// which means moving in random direction.
 	// But your random strategy have to designed carefully so that ghost won't walk back and forth.
 	// (The code here DO perform walking back and forth.)
-	
+
 }
 
 static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M) {

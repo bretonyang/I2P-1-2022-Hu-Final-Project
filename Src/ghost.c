@@ -21,9 +21,9 @@ static const int fix_draw_pixel_offset_x = -3;
 static const int fix_draw_pixel_offset_y = -3;
 static const int draw_region = 30;
 // [ NOTE - speed again ]
-// Again, you see this notaficationd. If you still want to implement something 
-// fancy with speed, objData->moveCD and GAME_TICK, you can first start on 
-// working on animation of ghosts and pacman. // Once you finished the animation 
+// Again, you see this notaficationd. If you still want to implement something
+// fancy with speed, objData->moveCD and GAME_TICK, you can first start on
+// working on animation of ghosts and pacman. // Once you finished the animation
 // part, you will have more understanding on whole mechanism.
 static const int basic_speed = 2;
 
@@ -131,7 +131,7 @@ void ghost_NextMove(Ghost* ghost, Directions next) {
 void printGhostStatus(GhostStatus S) {
 
 	switch(S){
-	
+
 	case BLOCKED: // stay inside the ghost room
 		game_log("BLOCKED");
 		break;
@@ -158,28 +158,29 @@ bool ghost_movable(Ghost* ghost, Map* M, Directions targetDirec, bool room) {
 	// Basically, this is a ghost version of `pacman_movable`.
 	// So if you have finished (and you should), you can just "copy and paste"
 	// and do some small alternation.
-
-	/*
-	... ghost->objData.Coord.x, ... ghost->objData.Coord.y;
+	int next_x = ghost->objData.Coord.x, next_y = ghost->objData.Coord.y;
 
 	switch (targetDirec)
 	{
 	case UP:
-		...
+		next_y -= 1;
+		break;
 	case DOWN:
-		...
+		next_y += 1;
+		break;
 	case LEFT:
-		...
+		next_x -= 1;
+		break;
 	case RIGHT:
-		...
+		next_x += 1;
+		break;
 	default:
 		// for none UP, DOWN, LEFT, RIGHT direction u should return false.
 		return false;
 	}
 
-	if (is_wall_block(M, ..., ...) || (room && is_room_block(M, ..., ...)))
+	if (is_wall_block(M, next_x, next_y) || (room && is_room_block(M, next_x, next_y)))
 		return false;
-	*/
 
 	return true;
 
@@ -225,7 +226,7 @@ void ghost_move_script_GO_OUT(Ghost* ghost, Map* M) {
 	// Here we always assume the room of ghosts opens upward.
 	// And used a greedy method to drag ghosts out of room.
 	// You should modify here if you have different implementation/design of room.
-	if(M->map[ghost->objData.Coord.y][ghost->objData.Coord.x] == 'B') 
+	if(M->map[ghost->objData.Coord.y][ghost->objData.Coord.x] == 'B')
 		ghost_NextMove(ghost, UP);
 	else
 		ghost->status = FREEDOM;

@@ -3,13 +3,13 @@
 #include "map.h"
 /* Static variables */
 static const int start_grid_x = 25, start_grid_y = 25;		// where to put pacman at the beginning
-static const int fix_draw_pixel_offset_x = -3, fix_draw_pixel_offset_y = -3;  // draw offset 
+static const int fix_draw_pixel_offset_x = -3, fix_draw_pixel_offset_y = -3;  // draw offset
 static const int draw_region = 30;							// pacman bitmap draw region
 static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
 // [ NOTE - speed ]
 // If you want to implement something regarding speed.
 // You may have to modify the basic_speed here.
-// But before you modify this, make sure you are 
+// But before you modify this, make sure you are
 // totally understand the meaning of speed and function
 // `step()` in `scene_game.c`, also the relationship between
 // `speed`, `GAME_TICK`, `GAME_TICK_CD`, `objData->moveCD`.
@@ -34,26 +34,29 @@ static bool pacman_movable(Pacman* pacman, Map* M, Directions targetDirec) {
 	// 2) the coordinate data of pacman is stored in pacman->objData.Coord
 	// it is a self-defined pair IntInt type. Trace the code and utilize it.
 
-	/*
-	... pacman->objData.Coord.x, ... pacman->objData.Coord.y;
-	
+	int next_x = pacman->objData.Coord.x, next_y= pacman->objData.Coord.y;
+
 	switch (targetDirec)
 	{
-	case UP:
-		...
-	case DOWN:
-		...
-	case LEFT:
-		...
-	case RIGHT:
-		...
-	default:
-		// for none UP, DOWN, LEFT, RIGHT direction u should return false.
-		return false;
+    case UP:
+        next_y -= 1;
+        break;
+    case DOWN:
+        next_y += 1;
+        break;
+    case LEFT:
+        next_x -= 1;
+        break;
+    case RIGHT:
+        next_x += 1;
+        break;
+    default:
+        // for none UP, DOWN, LEFT, RIGHT direction u should return false.
+        return false;
 	}
-	if (is_wall_block(M, ..., ...) || is_room_block(M, ..., ...))
+	if (is_wall_block(M, next_x, next_y) || is_room_block(M, next_x, next_y))
 		return false;
-	*/
+
 	return true;
 }
 
@@ -119,7 +122,7 @@ void pacman_draw(Pacman* pman) {
 		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
 		draw_region, draw_region, 0
 	);
-	
+
 	int offset = 0;
 	if (game_over) {
 		/*
@@ -143,9 +146,9 @@ void pacman_move(Pacman* pacman, Map* M) {
 		return;
 
 	int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;
-	if (pacman_movable(pacman, M, pacman->objData.nextTryMove)) 
+	if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
 		pacman->objData.preMove = pacman->objData.nextTryMove;
-	else if (!pacman_movable(pacman, M, pacman->objData.preMove)) 
+	else if (!pacman_movable(pacman, M, pacman->objData.preMove))
 		return;
 
 	switch (pacman->objData.preMove)

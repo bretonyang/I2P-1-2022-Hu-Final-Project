@@ -49,7 +49,7 @@ typedef enum Directions{
 	UP_RIGHT = 10
 } Directions;
 typedef struct object {
-	Pair_IntInt Coord; // 
+	Pair_IntInt Coord; //
 	Pair_IntInt Size; // x for width, y for height
 	Directions facing;
 	Directions preMove;
@@ -79,9 +79,9 @@ bool bernoulliTrail(double p); // Given a Possibility and decided if occur.
 // TODO: Declare a function.
 // Determines whether the point (px, py) is in rect (x, y, w, h).
 // Uncomment the code below.
-/*
+
 bool pnt_in_rect(int px, int py, RecArea field);
-*/
+
 // -------------------------
 
 

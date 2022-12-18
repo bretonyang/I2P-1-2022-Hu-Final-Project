@@ -85,11 +85,11 @@ ALLEGRO_BITMAP* load_bitmap_resized(const char* filename, int w, int h) {
 // [HACKATHON 3-5]
 // TODO: Define bool pnt_in_rect(int px, int py, RecArea field)
 // Uncomment and fill in the code below.
-/*
+
 bool pnt_in_rect(int px, int py, RecArea field) {
-	return ???;
+	return px >= field.x && px <= field.x + field.w && py >= field.y && py <= field.y + field.h;
 }
-*/
+
 
 void setRecArea(RecArea* RA, float x, float y, float w, float h) {
 	RA->x = x;
@@ -117,7 +117,7 @@ bool RecAreaOverlap(const RecArea RA,const RecArea RB) {
 RecArea getDrawArea(object obj, uint32_t TOTAL_TICK) {
 	// NOTODO
 	RecArea target;
-		
+
 	target.x = map_offset_x + obj.Coord.x * block_width;
 	target.y = map_offset_y + obj.Coord.y * block_height;
 	target.w = block_width;
@@ -142,7 +142,7 @@ RecArea getDrawArea(object obj, uint32_t TOTAL_TICK) {
 			break;
 	}
 
-	return target;	
+	return target;
 }
 void printRecAreaInfo(const RecArea* RA) {
 	// NOTODO
@@ -182,7 +182,7 @@ bool movetime(int speed) {
 
 uint32_t generateRandomNumber(uint32_t a, uint32_t b) {
 	// NOTODO
-	if (b < a) 
+	if (b < a)
 		game_abort("Error in RandomNumber, b is less than a");
 //	srand(time(NULL));
 	return rand() % (b - a + 1) + a;
@@ -195,8 +195,8 @@ double generateRandomFloat() {
 
 bool bernoulliTrail(double p) {
 	// NOTODO
-	if (p >= 1 || p <= 0) 
+	if (p >= 1 || p <= 0)
 		game_abort("Error range of p = %lf in BernoulliTrail func\n But p should be between 0.0 and 1.0", p);
 	return generateRandomFloat() < p;
-	
+
 }

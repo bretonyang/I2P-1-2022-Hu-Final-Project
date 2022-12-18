@@ -30,10 +30,10 @@ Button button_create(float x, float y, float w, float h, const char* default_ima
 }
 
 void drawButton(Button button) {
-	ALLEGRO_BITMAP* _img = button.hovered_img ? 
-												button.hovered ? 
-													button.hovered_img : 
-													button.default_img : 
+	ALLEGRO_BITMAP* _img = button.hovered_img ?
+												button.hovered ?
+													button.hovered_img :
+													button.default_img :
 												button.default_img;
 	al_draw_scaled_bitmap(
 		_img,
@@ -48,8 +48,5 @@ bool buttonHover(Button button, int mouse_x, int mouse_y) {
 	//	[HACKATHON 3-6]
 	//	TODO: Check if mouse is hovering on the button
 	//	Uncomment and fill the code below
-	/*
-	return pnt_in_rect(...);
-	*/
-	return false;
+	return pnt_in_rect(mouse_x, mouse_y, button.body);
 }

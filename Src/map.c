@@ -85,6 +85,7 @@ const char* default_map[] = {
 
 
 Map* create_map(const char * filepath) {
+    game_log("%s", filepath);
 
 // [HACKATHON 0]
 // TODO: Read the map from "Assets/map_nthu.txt"
@@ -161,9 +162,8 @@ Map* create_map(const char * filepath) {
 			else
 				// [HACKATHON 0-2]
 				// read the map from file just like read from default_map
-				/*
-				fscanf(...);
-				*/
+				fscanf(pFile, "%c", &M->map[i][j]);
+
 			switch(M->map[i][j]) {
 			case '#':
 				M->wallnum++;
@@ -176,7 +176,7 @@ Map* create_map(const char * filepath) {
 			}
 		}
 		if(filepath != NULL)
-			getc(pFile);
+			getc(pFile); // get the '\n'
 	}
 	M->beansNum = M->beansCount;
 	return M;
@@ -187,13 +187,12 @@ void delete_map(Map* M) {
 		return;
 	// [TODO]
 	// you should free the dynamic allocated part of Map* M at here;
-	/*
-	if(M->map)
-	{
-		...
-		free(...)
-		...
-	*/
+	if (M->map) {
+        for (int i = 0; i < M->row_num; i++) {
+            free(M->map[i]);
+        }
+        free(M->map);
+	}
 	free(M);
 }
 

@@ -69,11 +69,7 @@ Pacman* pacman_create() {
 	Pacman* pman = (Pacman*)malloc(sizeof(Pacman));
 	if (!pman)
 		return NULL;
-	/*
-		Pacman* pman = ...
-		if(!pman)
-			return NULL;
-	*/
+
 	/* Init pman data */
 	/* set starting point, Size, */
 	/* TODO? */

@@ -74,10 +74,9 @@ static void init(void) {
 		// [HACKATHON 2-2]
 		// TODO: create a ghost.
 		// Try to look the definition of ghost_create and figure out what should be placed here.
-		for (int i = 0; i < GHOST_NUM; i++) {
-
-			game_log("Creating ghost %d", i);
-			ghosts[i] = ghost_create(Blinky);
+		for (GhostType i = 0; i < GHOST_NUM; i++) {
+			game_log("Creating ghost: %d", i);
+			ghosts[i] = ghost_create(i);
 			if (!ghosts[i])
 				game_abort("error creating ghost\n");
 
@@ -172,7 +171,7 @@ static void draw(void) {
 
 
 	//	[TODO]
-	//	Draw scoreboard, something your may need is sprinf();
+	//	Draw scoreboard, something you may need is sprinf();
 	/*
 		al_draw_text(...);
 	*/

@@ -19,9 +19,10 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 
 	static Directions proba[4]; // possible movement
 	int cnt = 0;
-	for (Directions i = 1; i <= 4; i++)
+	for (Directions i = 1; i <= 4; i++) {
 		if (ghost_movable(ghost, M, i, is_room_block(M, ghost->objData.Coord.x, ghost->objData.Coord.y)))
             proba[cnt++] = i;
+	}
 
 	ghost_NextMove(ghost, proba[rand() % cnt]);
 
@@ -58,58 +59,58 @@ static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M) {
 }
 
 void ghost_red_move_script(Ghost* ghost, Map* M, Pacman* pacman) {
-	if (!movetime(ghost->speed))
-		return;
-		switch (ghost->status)
-		{
-		case BLOCKED:
-			ghost_red_move_script_BLOCKED(ghost, M);
-			if (al_get_timer_count(game_tick_timer) > GO_OUT_TIME)
-				ghost->status = GO_OUT;
-			break;
-		case FREEDOM:
-			ghost_red_move_script_FREEDOM(ghost, M);
-			break;
-		case GO_OUT:
-			ghost_move_script_GO_OUT(ghost, M);
-			break;
-		case GO_IN:
-			ghost_move_script_GO_IN(ghost, M);
-			if (M->map[ghost->objData.Coord.y][ghost->objData.Coord.x] == 'B') {
-				ghost->status = GO_OUT;
-				ghost->speed = 2;
-			}
-			break;
-		case FLEE:
-			ghost_move_script_FLEE(ghost, M, pacman);
-			break;
-		default:
-			break;
-		}
+    if (!movetime(ghost->speed))
+        return;
 
-		if(ghost_movable(ghost, M, ghost->objData.nextTryMove, false)){
-			ghost->objData.preMove = ghost->objData.nextTryMove;
-			ghost->objData.nextTryMove = NONE;
-		}
-		else if (!ghost_movable(ghost, M, ghost->objData.preMove, false))
-			return;
+    switch (ghost->status) {
+        case BLOCKED:
+            ghost_red_move_script_BLOCKED(ghost, M);
+            if (al_get_timer_count(game_tick_timer) > GO_OUT_TIME)
+                ghost->status = GO_OUT;
+            break;
+        case FREEDOM:
+            ghost_red_move_script_FREEDOM(ghost, M);
+            break;
+        case GO_OUT:
+            ghost_move_script_GO_OUT(ghost, M);
+            break;
+        case GO_IN:
+            ghost_move_script_GO_IN(ghost, M);
+            if (M->map[ghost->objData.Coord.y][ghost->objData.Coord.x] == 'B') {
+                ghost->status = GO_OUT;
+                ghost->speed = 2;
+            }
+            break;
+        case FLEE:
+            ghost_move_script_FLEE(ghost, M, pacman);
+            break;
+        default:
+            break;
+    }
 
-		switch (ghost->objData.preMove) {
-		case RIGHT:
-			ghost->objData.Coord.x += 1;
-			break;
-		case LEFT:
-			ghost->objData.Coord.x -= 1;
-			break;
-		case UP:
-			ghost->objData.Coord.y -= 1;
-			break;
-		case DOWN:
-			ghost->objData.Coord.y += 1;
-			break;
-		default:
-			break;
-		}
-		ghost->objData.facing = ghost->objData.preMove;
-		ghost->objData.moveCD = GAME_TICK_CD;
+    if(ghost_movable(ghost, M, ghost->objData.nextTryMove, false)){
+        ghost->objData.preMove = ghost->objData.nextTryMove;
+        ghost->objData.nextTryMove = NONE;
+    }
+    else if (!ghost_movable(ghost, M, ghost->objData.preMove, false))
+        return;
+
+    switch (ghost->objData.preMove) {
+        case RIGHT:
+            ghost->objData.Coord.x += 1;
+            break;
+        case LEFT:
+            ghost->objData.Coord.x -= 1;
+            break;
+        case UP:
+            ghost->objData.Coord.y -= 1;
+            break;
+        case DOWN:
+            ghost->objData.Coord.y += 1;
+            break;
+        default:
+            break;
+    }
+    ghost->objData.facing = ghost->objData.preMove;
+    ghost->objData.moveCD = GAME_TICK_CD;
 }

@@ -14,11 +14,12 @@
 // known as "internal linkage"). If other files has the same variable
 // name, they'll be different variables.
 
+// Use `include guard` to avoid multiple inclusion
 #ifndef GAME_H
 #define GAME_H
 #define _CRT_SECURE_NO_DEPRECATE
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_font.h>	
+#include <allegro5/allegro_font.h>
 typedef struct Ghost Ghost;
 typedef struct Map Map;
 typedef struct Pacman Pacman;
@@ -72,6 +73,13 @@ extern bool* mouse_state;
 // Mouse position.
 extern int mouse_x, mouse_y;
 // TODO: More variables to store input states such as joysticks, ...
+
+
+/* Game states */
+
+// Whether game is finished
+extern bool gameDone;
+
 
 /* Function prototypes */
 

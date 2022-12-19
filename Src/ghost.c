@@ -27,7 +27,7 @@ static const int draw_region = 30;
 // part, you will have more understanding on whole mechanism.
 static const int basic_speed = 2;
 
-Ghost* ghost_create(int flag) {
+Ghost* ghost_create(GhostType flag) {
 
 	// NOTODO
 	Ghost* ghost = (Ghost*)malloc(sizeof(Ghost));

@@ -7,7 +7,7 @@
 // but you want to (should) prevent mutually include dependency.
 // Only applicable when you only need the declaration but no need the definition in you sturct,
 // which means that you only used the struct as pointer(no access to struct data), param, return type in this file.
-// If you have to access the data in struct ex. `A->data`, 
+// If you have to access the data in struct ex. `A->data`,
 // you should include the corresponding header file for its definition.
 // Advance reading : https://stackoverflow.com/questions/18658438/what-is-forward-declaration-and-the-difference-between-typedef-struct-x-and
 
@@ -18,7 +18,7 @@ typedef enum {
 	BLOCKED,						 // stay inside the ghost room
 	GO_OUT,							 // going out the ghost room
 	FREEDOM,					     // free at the map
-	GO_IN,							 // going back to the ghost room 
+	GO_IN,							 // going back to the ghost room
 	FLEE							 // pacman powered up
 } GhostStatus;
 
@@ -43,7 +43,7 @@ typedef struct Ghost{
 	ALLEGRO_BITMAP* dead_sprite;
 } Ghost;
 
-Ghost* ghost_create(int flag);
+Ghost* ghost_create(GhostType flag);
 void ghost_destory(Ghost* ghost);
 void ghost_draw(Ghost* ghost);
 void ghost_NextMove(Ghost* ghost, Directions next);

@@ -96,10 +96,9 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 //  `if clicked the mouse` && `mouse position is in the area of button`
 // 	      `Enter the setting scene`
 //	Uncomment and fill the code below
-
 static void on_mouse_down() {
 	if (btnSettings.hovered)
-		game_change_scene(scene_settings_create());
+		game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
 }
 
 
@@ -109,7 +108,6 @@ static void destroy() {
 	//	[HACKATHON 3-10]
 	//	TODO: Destroy button images
 	//	Uncomment and fill the code below
-
 	al_destroy_bitmap(btnSettings.default_img);
 	al_destroy_bitmap(btnSettings.hovered_img);
 
@@ -146,7 +144,6 @@ Scene scene_menu_create(void) {
 	// [HACKATHON 3-9]
 	// TODO: Register on_mouse_down.
 	// Uncomment the code below.
-
 	scene.on_mouse_down = &on_mouse_down;
 
 	// -------------------------------------

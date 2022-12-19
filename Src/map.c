@@ -10,7 +10,7 @@
 // [ NOTE ]
 const int block_width = 21,  block_height = 21;			// the pixel size of a "block"
 const int map_offset_x = 25, map_offset_y = 50;			// pixel offset of where to start draw map
-const int four_probe[4][2] = {{ 1, 0 }, { 0, 1 }, { -1,0 }, { 0, -1 }};
+const int four_probe[4][2] = {{ 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }};
 
 /* Declare static function prototypes. */
 static void draw_block_index(Map* M, int row, int col);
@@ -85,8 +85,6 @@ const char* default_map[] = {
 
 
 Map* create_map(const char * filepath) {
-    game_log("%s", filepath);
-
 // [HACKATHON 0]
 // TODO: Read the map from "Assets/map_nthu.txt"
 // ~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~
@@ -113,12 +111,13 @@ Map* create_map(const char * filepath) {
 		// [HACKATHON 0-1]
 		// use fopen to create a file FILE* type
 		// use pFile can fscanf do reading from file just like read from command line.
-		game_log("%s\n", filepath);
 		pFile = fopen(filepath, "r");
 		if (!pFile) {
 			game_abort("error to open map file\n");
 			return NULL;
 		}
+        game_log("Creating map from file: %s", filepath);
+
 		if(fscanf(pFile, "%d %d", &M->row_num, &M->col_num) != 2) {
 			game_abort("Map format unmatched\n");
 			return NULL;
@@ -164,21 +163,27 @@ Map* create_map(const char * filepath) {
 				// read the map from file just like read from default_map
 				fscanf(pFile, "%c", &M->map[i][j]);
 
-			switch(M->map[i][j]) {
-			case '#':
-				M->wallnum++;
-				break;
-			case '.':
-				M->beansCount++;
-				break;
-			default:
-				break;
+			switch(M->map[i][j])
+			{
+                case '#':
+                    M->wallnum++;
+                    break;
+                case '.':
+                    M->beansCount++;
+                    break;
+                default:
+                    break;
 			}
 		}
 		if(filepath != NULL)
 			getc(pFile); // get the '\n'
 	}
+
 	M->beansNum = M->beansCount;
+
+	if (filepath != NULL)
+        fclose(pFile);
+
 	return M;
 }
 
@@ -302,11 +307,15 @@ static void draw_block_index(Map* M, const int row, const int col) {
 }
 
 static void draw_bean(Map* M, const int row, const int col) {
-	al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0, map_offset_y + row * block_height + block_height / 2.0, block_width/6.0,  al_map_rgb(234, 38, 38));
+	al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0,
+                       map_offset_y + row * block_height + block_height / 2.0,
+                       block_width/6.0,  al_map_rgb(234, 38, 38));
 }
 
 static void draw_power_bean(Map* M, const int row, const int col) {
-	al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0, map_offset_y + row * block_height + block_height / 2.0, block_width / 3.0, al_map_rgb(234, 178, 38));
+	al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0,
+                       map_offset_y + row * block_height + block_height / 2.0,
+                       block_width / 3.0, al_map_rgb(234, 178, 38));
 }
 
 

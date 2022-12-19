@@ -14,7 +14,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include "game.h"
-#include "scene_game.h" 
+#include "scene_game.h"
 #include "scene_menu.h"
 /* global variables*/
 const int FPS = 60;
@@ -29,7 +29,7 @@ int mouse_x, mouse_y;
 uint32_t GAME_TICK = 0;
 const uint32_t GAME_TICK_CD = 64;
 ALLEGRO_TIMER* game_tick_timer;
-extern bool gameDone;
+//extern bool gameDone;
 
 /* Internal variables. */
 static ALLEGRO_DISPLAY* game_display;
@@ -67,10 +67,10 @@ void game_create() {
 	game_log("Game initialized");
 	// First scene
 	game_change_scene(scene_menu_create());
-	
-	
+
+
 	// Draw the first frame.
-	
+
 	game_draw();
 	game_log("Game start event loop");
 	// This call blocks until the game is finished.
@@ -270,9 +270,10 @@ void game_change_scene(Scene next_scene) {
 	if(game_tick_timer == NULL)
 		game_abort("NULL game tick timer!!!");
 	al_stop_timer(game_tick_timer);
+
 	active_scene = next_scene;
 	if (active_scene.initialize)
-		active_scene.initialize();
+		(*active_scene.initialize)();
 	if (game_tick_timer == NULL) {
 		game_abort("NULL game tick timer!!!");
 	}

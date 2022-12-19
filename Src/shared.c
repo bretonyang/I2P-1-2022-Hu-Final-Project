@@ -21,10 +21,10 @@ bool gameDone = false;
 	A way to accelerate is load assets once.
 	And delete them at the end.
 	This method does provide you better management of memory.
-	
+
 */
 void shared_init(void) {
-	
+
 	menuFont = load_font("Assets/Minecraft.ttf", fontSize);
 	themeMusic = load_audio("Assets/Music/original_theme.ogg");
 	PACMAN_MOVESOUND = load_audio("Assets/Music/pacman-chomp.ogg");

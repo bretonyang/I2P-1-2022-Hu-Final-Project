@@ -82,7 +82,8 @@ void ghost_draw(Ghost* ghost) {
 	//Draw default image
 //	al_draw_scaled_bitmap(ghost->move_sprite, 0, 0, 16, 16,
 //		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-//		draw_region, draw_region, 0);
+//		draw_region, draw_region, 0
+//  );
 
 	/*
 		[TODO]
@@ -131,17 +132,23 @@ void ghost_draw(Ghost* ghost) {
             case DOWN:
                 bitmap_x_offset = 96;
                 break;
+            default:
+                break;
 		}
 
 		// draw 2 different motion images per GAME_TICK_CD
 		if (ghost->objData.moveCD * 2 / GAME_TICK_CD) // == moveCD / (GAME_TICK_CD / 2)
-            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset, 0, 16, 16,
+            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset, 0,
+                16, 16,
                 drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-                draw_region, draw_region, 0);
+                draw_region, draw_region, 0
+            );
         else
-            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset + 16, 0, 16, 16,
+            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset + 16, 0,
+                16, 16,
                 drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-                draw_region, draw_region, 0);
+                draw_region, draw_region, 0
+            );
 	}
 
 }

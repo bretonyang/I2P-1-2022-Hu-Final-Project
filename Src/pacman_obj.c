@@ -124,11 +124,11 @@ void pacman_draw(Pacman* pman) {
 	RecArea drawArea = getDrawArea(pman->objData, GAME_TICK_CD);
 
 	//Draw default image
-	al_draw_scaled_bitmap(pman->move_sprite, 0, 0,
-		16, 16,
-		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-		draw_region, draw_region, 0
-	);
+//	al_draw_scaled_bitmap(pman->move_sprite, 0, 0,
+//		16, 16,
+//		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+//		draw_region, draw_region, 0
+//	);
 
 	int offset = 0;
 	if (game_over) {
@@ -137,13 +137,42 @@ void pacman_draw(Pacman* pman) {
 		*/
 	}
 	else {
-		/*
-			switch(pman->objData.facing)
-			{
-			case LEFT:
-				...
-			}
-		*/
+        // get the bitmap offset by deciding which side pman's facing
+        switch(pman->objData.facing) {
+            case RIGHT:
+                offset = 0;
+                break;
+            case LEFT:
+                offset = 32;
+                break;
+            case UP:
+                offset = 64;
+                break;
+            case DOWN:
+                offset = 96;
+                break;
+            default:
+                break;
+        }
+
+        // draw 4 frames with 2 different motion images per GAME_TICK_CD
+        switch (pman->objData.moveCD * 4 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 4)
+            case 1:
+            case 3:
+                al_draw_scaled_bitmap(pman->move_sprite, offset, 0,
+                    16, 16,
+                    drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                    draw_region, draw_region, 0
+                );
+                break;
+            default: // case 0 and 2
+                al_draw_scaled_bitmap(pman->move_sprite, offset + 16, 0,
+                    16, 16,
+                    drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                    draw_region, draw_region, 0
+                );
+                break;
+        }
 	}
 }
 void pacman_move(Pacman* pacman, Map* M) {

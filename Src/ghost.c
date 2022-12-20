@@ -17,11 +17,13 @@ extern uint32_t GAME_TICK;
 extern uint32_t GAME_TICK_CD;
 extern const int block_width,  block_height;
 /* Internal variables */
+static const int ghost_src_w = 16;
+static const int ghost_src_h = 16;
 static const int fix_draw_pixel_offset_x = -3;
 static const int fix_draw_pixel_offset_y = -3;
 static const int draw_region = 30;
 // [ NOTE - speed again ]
-// Again, you see this notaficationd. If you still want to implement something
+// Again, you see this notificationd. If you still want to implement something
 // fancy with speed, objData->moveCD and GAME_TICK, you can first start on
 // working on animation of ghosts and pacman. // Once you finished the animation
 // part, you will have more understanding on whole mechanism.
@@ -65,7 +67,7 @@ Ghost* ghost_create(GhostType flag) {
 	}
 	return ghost;
 }
-void ghost_destory(Ghost* ghost) {
+void ghost_destroy(Ghost* ghost) {
     // [TODO]
     // free ghost resource
     al_destroy_bitmap(ghost->move_sprite);
@@ -78,9 +80,9 @@ void ghost_draw(Ghost* ghost) {
 	RecArea drawArea = getDrawArea(ghost->objData, GAME_TICK_CD);
 
 	//Draw default image
-	al_draw_scaled_bitmap(ghost->move_sprite, 0, 0, 16, 16,
-		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-		draw_region, draw_region, 0);
+//	al_draw_scaled_bitmap(ghost->move_sprite, 0, 0, 16, 16,
+//		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+//		draw_region, draw_region, 0);
 
 	/*
 		[TODO]
@@ -115,13 +117,31 @@ void ghost_draw(Ghost* ghost) {
 		*/
 	}
 	else {
-		/*
-		switch (ghost->objData.facing)
-		{
-		case LEFT:
-			...
+        // decide which image to apply in bitmap
+		switch (ghost->objData.facing) {
+            case RIGHT:
+                bitmap_x_offset = 0;
+                break;
+			case LEFT:
+                bitmap_x_offset = 32;
+                break;
+            case UP:
+                bitmap_x_offset = 64;
+                break;
+            case DOWN:
+                bitmap_x_offset = 96;
+                break;
 		}
-		*/
+
+		// draw 2 different motion images per GAME_TICK_CD
+		if (ghost->objData.moveCD * 2 / GAME_TICK_CD) // == moveCD / (GAME_TICK_CD / 2)
+            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset, 0, 16, 16,
+                drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                draw_region, draw_region, 0);
+        else
+            al_draw_scaled_bitmap(ghost->move_sprite, bitmap_x_offset + 16, 0, 16, 16,
+                drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                draw_region, draw_region, 0);
 	}
 
 }

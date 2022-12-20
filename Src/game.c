@@ -164,7 +164,7 @@ static void game_start_event_loop(void) {
 			// Event for redrawing the display.
 			if (event.timer.source == game_update_timer)
 			{
-				// The redraw timer has ticked.
+				// The redraw timer  has ticked.
 				redraws++;
 			}
 			else if(event.timer.source == game_tick_timer){

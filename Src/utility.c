@@ -175,7 +175,7 @@ void printDirection(const Directions a) {
 }
 
 /**
- * Returns true if the object with the passed speed should move.
+ * Returns true if the object with the passed `speed` should move.
  * The number of times an object moves in 1 GAME_TICK_CD is the same as the value of `speed`.
  */
 bool movetime(int speed) {

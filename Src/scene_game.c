@@ -132,8 +132,10 @@ static void status_update(void) {
 		// [NOTE]
 		// You should have some branch here if you want to implement power bean mode.
 		// Uncomment Following Code
-		/*
-		if(!cheat_mode and collision of pacman and ghost)
+
+		// if not cheat_mode and (collision of pacman and ghost)
+		if(!cheat_mode && RecAreaOverlap(getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
+                                   getDrawArea(pman->objData, GAME_TICK_CD)))
 		{
 			game_log("collide with ghost\n");
 			al_rest(1.0);
@@ -141,7 +143,6 @@ static void status_update(void) {
 			game_over = true;
 			break;
 		}
-		*/
 	}
 }
 
@@ -225,6 +226,10 @@ static void destroy(void) {
 		[TODO]
 		free map array, Pacman and ghosts
 	*/
+	delete_map(basic_map);
+	pacman_destroy(pman);
+	for (int i = 0; i < GHOST_NUM; i++)
+        ghost_destroy(ghosts[i]);
 }
 
 static void on_key_down(int key_code) {

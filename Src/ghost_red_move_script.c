@@ -45,7 +45,7 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 	static Directions proba[4]; // possible movements
 	int cnt = 0; // count of possible movements
 	for (Directions i = 1; i <= 4; i++) {
-		if (i != prevDirec && ghost_movable(ghost, M, i, true))
+		if (i != prevDirec && ghost_movable(ghost, M, i, true)) // `true` argument means shouldn't walk into room
             proba[cnt++] = i;
 	}
 

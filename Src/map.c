@@ -213,8 +213,7 @@ void draw_map(Map const* M) {
 	*/
 	for (int row = 0; row < M->row_num; row++) {
 		for (int col = 0; col < M->col_num; col++) {
-			switch (M->map[row][col])
-			{
+			switch (M->map[row][col]) {
 				case '#':
 					draw_block_index(M, row, col);
 					break;

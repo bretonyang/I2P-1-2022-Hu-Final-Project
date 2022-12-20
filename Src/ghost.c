@@ -177,6 +177,7 @@ bool ghost_movable(Ghost* ghost, Map* M, Directions targetDirec, bool room) {
 		return false;
 	}
 
+	// if room == true, then ghost can NOT move into room
 	if (is_wall_block(M, next_x, next_y) || (room && is_room_block(M, next_x, next_y)))
 		return false;
 

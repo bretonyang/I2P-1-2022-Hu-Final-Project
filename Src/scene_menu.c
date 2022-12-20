@@ -71,10 +71,10 @@ static void draw() {
 		"PRESS \"ENTER\""
 	);
 
-		// [HACKATHON 3-3]
-		// TODO: Draw button
-		// Uncomment and fill the code below
-		drawButton(btnSettings);
+    // [HACKATHON 3-3]
+    // TODO: Draw button
+    // Uncomment and fill the code below
+    drawButton(btnSettings);
 
 }
 

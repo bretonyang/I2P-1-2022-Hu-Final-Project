@@ -13,10 +13,15 @@ extern const int cage_grid_x, cage_grid_y;
 static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M);
 static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M);
 
+/**
+ * Movement script for FREEDOM (free at the map) red ghost.
+ * Ghost should move randomly without walking back into the room.
+ */
 static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 	// [HACKATHON 2-4]
 	// Uncomment the following code and finish pacman picking random direction.
 
+	// Find the direction of the ghost's previous position
     Directions prevDirec;
     switch (ghost->objData.preMove) {
         case UP:
@@ -36,14 +41,17 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
             break;
     }
 
-	static Directions proba[4]; // possible movement
-	int cnt = 0;
+	static Directions proba[4]; // possible movements
+	int cnt = 0; // count of possible movements
 	for (Directions i = 1; i <= 4; i++) {
 		if (i != prevDirec && ghost_movable(ghost, M, i, true))
             proba[cnt++] = i;
 	}
 
-	ghost_NextMove(ghost, proba[generateRandomNumber(0, cnt - 1)]);
+	if (!cnt)
+        ghost_NextMove(ghost, prevDirec); // move backwards if no possible movements available
+    else
+        ghost_NextMove(ghost, proba[generateRandomNumber(0, cnt - 1)]); // randomly choose an allowed moving direction
 
 
 	// [TODO] (Not in Hackathon)
@@ -53,11 +61,14 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 	// But your random strategy have to designed carefully so that ghost won't walk back and forth.
 	// (The code here DO perform walking back and forth.)
 
+	// BUG: When ghost move to dead end, the game crashes.
+    // (UPDATE: Bug fixed)
+
 }
 
 /**
- * Movement script for blocked red ghost.
- * The ghost is expected to keep moving up and down inside its room.
+ * Movement script for BLOCKED (inside the ghost room) red ghost.
+ * The ghost is expected to keep moving up and down inside the room.
  */
 static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M) {
 

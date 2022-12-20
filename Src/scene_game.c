@@ -66,7 +66,6 @@ static void init(void) {
 	// [HACKATHON 2-1]
 	// TODO: Allocate dynamic memory for ghosts array.
 	ghosts = (Ghost**)malloc(sizeof(Ghost*) * GHOST_NUM);
-
 	if(!ghosts){
 		game_log("We haven't create any ghosts!\n");
 	}
@@ -182,6 +181,7 @@ static void draw(void) {
 	if (game_over)
 		return;
 	// no drawing below when game over
+
 	for (int i = 0; i < GHOST_NUM; i++)
 		ghost_draw(ghosts[i]);
 

@@ -27,6 +27,9 @@ static const int draw_region = 30;
 // part, you will have more understanding on whole mechanism.
 static const int basic_speed = 2;
 
+/**
+ * Create a ghost of GhostType `flag`.
+ */
 Ghost* ghost_create(GhostType flag) {
 
 	// NOTODO
@@ -62,14 +65,12 @@ Ghost* ghost_create(GhostType flag) {
 	return ghost;
 }
 void ghost_destory(Ghost* ghost) {
-	/*
-		[TODO]
-		free ghost resource
-
-		al_destory_bitmap(...);
-		...
-		free(ghost);
-	*/
+    // [TODO]
+    // free ghost resource
+    al_destroy_bitmap(ghost->move_sprite);
+    al_destroy_bitmap(ghost->dead_sprite);
+    al_destroy_bitmap(ghost->flee_sprite);
+    free(ghost);
 }
 void ghost_draw(Ghost* ghost) {
 	// getDrawArea return the drawing RecArea defined by objData and GAME_TICK_CD

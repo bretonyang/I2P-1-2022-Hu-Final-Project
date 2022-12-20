@@ -106,9 +106,16 @@ void pacman_destroy(Pacman* pman) {
 
 void pacman_draw(Pacman* pman) {
 	/*
-		[HW-TODO ]
+        [HW-TODO]
 		Draw Pacman and animations
 		hint: use pman->objData.moveCD to determine which frame of the animation to draw, you may refer to discription in ghost_draw in ghost.c
+	*/
+
+	/*  NOTE:
+        1. moveCD will decrease by its speed value when GAME_TICK ticks (i.e. game updates).
+        2. moveCD reaches 0 and is reset to GAME_TICK_CD when the pacman is allowed to move
+           (i.e. movetime returns true).
+        3.
 	*/
 	RecArea drawArea = getDrawArea(pman->objData, GAME_TICK_CD);
 
@@ -171,8 +178,8 @@ void pacman_move(Pacman* pacman, Map* M) {
 	default:
 		break;
 	}
-	pacman->objData.facing = pacman->objData.preMove;
-	pacman->objData.moveCD = GAME_TICK_CD;
+	pacman->objData.facing = pacman->objData.preMove; // record current facing direction
+	pacman->objData.moveCD = GAME_TICK_CD; // reset moveCD
 }
 void pacman_eatItem(Pacman* pacman, const char Item) {
 	switch (Item)

@@ -86,7 +86,7 @@ static void init(void) {
 	render_init_screen();
 	power_up_timer = al_create_timer(1.0f); // 1 tick / sec
 	if (!power_up_timer)
-		game_abort("Error on create timer\n");
+		game_abort("Error creating timer\n");
 	return ;
 }
 

@@ -175,7 +175,7 @@ void printDirection(const Directions a) {
 }
 
 bool movetime(int speed) {
-	//game_log("%d %d %d", GAME_TICK, GAME_TICK_CD, speed);
+    // game_log("%d %d %d %d", GAME_TICK, GAME_TICK_CD, speed, GAME_TICK % (GAME_TICK_CD / speed));
 	// NOTODO
 	return (GAME_TICK % (GAME_TICK_CD / speed)) == 0;
 }

@@ -142,11 +142,14 @@ void pacman_move(Pacman* pacman, Map* M) {
 		return;
 
 	int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;
-	if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
-		pacman->objData.preMove = pacman->objData.nextTryMove;
-	else if (!pacman_movable(pacman, M, pacman->objData.preMove))
-		return;
 
+	if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
+		pacman->objData.preMove = pacman->objData.nextTryMove; // record valid nextMove as preMove.
+	else if (!pacman_movable(pacman, M, pacman->objData.preMove))
+		return; // Don't move if nextTryMove and preMove are both invalid (e.g. when player
+
+    // move pacman according to the recorded valid nextMove
+    // or if nextMove is not valid, we'll use the original preMove
 	switch (pacman->objData.preMove)
 	{
 	case UP:

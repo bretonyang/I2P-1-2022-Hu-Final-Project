@@ -26,7 +26,9 @@ bool key_state[ALLEGRO_KEY_MAX];
 bool* mouse_state;
 /* Shared variables. */
 int mouse_x, mouse_y;
+// Counter to count up to GAME_TICK_CD, will reach GAME_TICK_CD twice per second
 uint32_t GAME_TICK = 0;
+// # of times the game should update the scene's status, it's set to update 2*GAME_TICK_CD / 1sec.
 const uint32_t GAME_TICK_CD = 64;
 ALLEGRO_TIMER* game_tick_timer;
 //extern bool gameDone;

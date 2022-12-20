@@ -26,6 +26,7 @@ static const int draw_region = 30;
 // working on animation of ghosts and pacman. // Once you finished the animation
 // part, you will have more understanding on whole mechanism.
 static const int basic_speed = 2;
+// speed: how many times `movetime` will return true per GAME_TICK_CD
 
 /**
  * Create a ghost of GhostType `flag`.

@@ -16,6 +16,7 @@ static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M);
 /**
  * Movement script for FREEDOM (free at the map) red ghost.
  * Ghost should move randomly without walking back into the room.
+ * Also, walking back and forth is not allowed.
  */
 static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
 	// [HACKATHON 2-4]

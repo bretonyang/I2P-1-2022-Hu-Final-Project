@@ -16,8 +16,8 @@
 /* Internal Variables*/
 static ALLEGRO_BITMAP* gameTitle = NULL;
 static ALLEGRO_SAMPLE_ID menuBGM;
-static int gameTitleW ;
-static int gameTitleH ;
+static int gameTitleW;
+static int gameTitleH;
 
 // [HACKATHON 3]
 // TARGET : use a clickable button to enter setting scene.
@@ -36,7 +36,7 @@ static void init() {
     //	Uncomment and fill the code below
     btnSettings = button_create(730, 20, 50, 50, "Assets/settings.png", "Assets/settings2.png");
 
-    gameTitle = load_bitmap("Assets/title.png");
+    gameTitle = load_bitmap("Assets/menu_title.png");
     gameTitleW = al_get_bitmap_width(gameTitle);
     gameTitleH = al_get_bitmap_height(gameTitle);
     stop_bgm(menuBGM);
@@ -53,7 +53,7 @@ static void draw() {
     const float offset_w = (SCREEN_W >> 1) - 0.5 * scale * gameTitleW;
     const float offset_h = (SCREEN_H >> 1) - 0.5 * scale * gameTitleH;
 
-    //draw title image
+    //draw menu title image
     al_draw_scaled_bitmap(
         gameTitle,
         0, 0,
@@ -62,6 +62,8 @@ static void draw() {
         gameTitleW * scale, gameTitleH * scale,
         0
     );
+
+    // draw game entering prompt
     al_draw_text(
         menuFont,
         al_map_rgb(255, 255, 255),
@@ -75,7 +77,16 @@ static void draw() {
     // TODO: Draw button
     // Uncomment and fill the code below
     drawButton(btnSettings);
+}
 
+static void destroy() {
+    stop_bgm(menuBGM);
+    al_destroy_bitmap(gameTitle);
+    //	[HACKATHON 3-10]
+    //	TODO: Destroy button images
+    //	Uncomment and fill the code below
+    al_destroy_bitmap(btnSettings.default_img);
+    al_destroy_bitmap(btnSettings.hovered_img);
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
@@ -99,18 +110,6 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 static void on_mouse_down() {
     if (btnSettings.hovered)
         game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
-}
-
-
-static void destroy() {
-    stop_bgm(menuBGM);
-    al_destroy_bitmap(gameTitle);
-    //	[HACKATHON 3-10]
-    //	TODO: Destroy button images
-    //	Uncomment and fill the code below
-    al_destroy_bitmap(btnSettings.default_img);
-    al_destroy_bitmap(btnSettings.hovered_img);
-
 }
 
 static void on_key_down(int keycode) {
@@ -140,20 +139,18 @@ Scene scene_menu_create(void) {
 
     Scene scene;
     memset(&scene, 0, sizeof(Scene));
+
+    // Register callbacks
     scene.name = "Menu";
     scene.initialize = &init;
     scene.draw = &draw;
     scene.destroy = &destroy;
-    scene.on_key_down = &on_key_down;
     scene.on_mouse_move = &on_mouse_move;
     // [HACKATHON 3-9]
     // TODO: Register on_mouse_down.
     // Uncomment the code below.
     scene.on_mouse_down = &on_mouse_down;
-
-    // -------------------------------------
-
-
+    scene.on_key_down = &on_key_down;
 
     // TODO: Register more event callback functions such as keyboard, mouse, ...
     game_log("Menu scene created");

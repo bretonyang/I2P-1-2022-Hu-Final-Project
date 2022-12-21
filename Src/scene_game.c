@@ -13,7 +13,8 @@
 
 // [HACKATHON 2-0]
 // Just modify the GHOST_NUM to 1
-#define GHOST_NUM 1
+#define GHOST_NUM 3
+
 /* global variables*/
 extern const uint32_t GAME_TICK_CD;
 extern uint32_t GAME_TICK;
@@ -44,6 +45,7 @@ static void on_key_down(int key_code);
 static void on_mouse_down(void);
 static void render_init_screen(void);
 static void draw_hitboxes(void);
+
 
 static void init(void) {
     game_over = false;
@@ -103,7 +105,7 @@ static void step(void) {
 }
 
 /**
- * Checks whether an item was eaten, and handles the corresponding for eating that item.
+ * Checks whether an item was eaten, and handles the corresponding event for eating that item.
  */
 static void checkItem(void) {
     int Grid_x = pman->objData.Coord.x, Grid_y = pman->objData.Coord.y;

@@ -47,6 +47,7 @@ Ghost* ghost_create(GhostType flag) {
     ghost->speed = basic_speed;
     ghost->status = BLOCKED;
 
+
     ghost->flee_sprite = load_bitmap("Assets/ghost_flee.png");
     ghost->dead_sprite = load_bitmap("Assets/ghost_dead.png");
 
@@ -56,6 +57,18 @@ Ghost* ghost_create(GhostType flag) {
         ghost->objData.Coord.y = cage_grid_y;
         ghost->move_sprite = load_bitmap("Assets/ghost_move_red.png");
         ghost->move_script = &ghost_red_move_script;
+        break;
+    case Pinky:
+        ghost->objData.Coord.x = cage_grid_x - 1;
+        ghost->objData.Coord.y = cage_grid_y;
+        ghost->move_sprite = load_bitmap("Assets/ghost_move_pink.png");
+        ghost->move_script = &ghost_pink_move_script;
+        break;
+    case Inky:
+        ghost->objData.Coord.x = cage_grid_x + 1;
+        ghost->objData.Coord.y = cage_grid_y;
+        ghost->move_sprite = load_bitmap("Assets/ghost_move_blue.png");
+        ghost->move_script = &ghost_blue_move_script;
         break;
     default:
         ghost->objData.Coord.x = cage_grid_x;

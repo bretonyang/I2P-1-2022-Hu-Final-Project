@@ -1,8 +1,9 @@
+
 #include "ghost.h"
 #include "pacman_obj.h"
 #include "map.h"
 
-#define GO_OUT_TIME 256
+#define GO_OUT_TIME 512
 
 /* Shared variables */
 extern uint32_t GAME_TICK_CD;
@@ -11,15 +12,15 @@ extern ALLEGRO_TIMER* game_tick_timer;
 extern const int cage_grid_x, cage_grid_y;
 
 /* Declare static function prototypes */
-static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M);
-static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M);
+static void ghost_pink_move_script_FREEDOM(Ghost* ghost, Map* M);
+static void ghost_pink_move_script_BLOCKED(Ghost* ghost, Map* M);
 
 /**
- * Movement script for FREEDOM (free at the map) red ghost.
+ * Movement script for FREEDOM (free at the map) pink ghost.
  * Ghost should move randomly without walking back into the room.
  * Also, walking back and forth is not allowed.
  */
-static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
+static void ghost_pink_move_script_FREEDOM(Ghost* ghost, Map* M) {
     // [HACKATHON 2-4]
     // Uncomment the following code and finish pacman picking random direction.
 
@@ -55,24 +56,13 @@ static void ghost_red_move_script_FREEDOM(Ghost* ghost, Map* M) {
     else
         ghost_NextMove(ghost, proba[generateRandomNumber(0, cnt - 1)]); // randomly choose an allowed moving direction
 
-
-    // [TODO] (Not in Hackathon)
-    // Description:
-    // For red(Blinky) ghost, we ask you to implement a random strategy ghost,
-    // which means moving in random direction.
-    // But your random strategy have to designed carefully so that ghost won't walk back and forth.
-    // (The code here DO perform walking back and forth.)
-
-    // BUG: When ghost move to dead end, the game crashes.
-    // (UPDATE: Bug fixed)
-
 }
 
 /**
- * Movement script for BLOCKED (inside the ghost room) red ghost.
+ * Movement script for BLOCKED (inside the ghost room) pink ghost.
  * The ghost is expected to keep moving up and down inside the room.
  */
-static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M) {
+static void ghost_pink_move_script_BLOCKED(Ghost* ghost, Map* M) {
 
     switch (ghost->objData.preMove) {
     case UP:
@@ -93,18 +83,18 @@ static void ghost_red_move_script_BLOCKED(Ghost* ghost, Map* M) {
     }
 }
 
-void ghost_red_move_script(Ghost* ghost, Map* M, Pacman* pacman) {
+void ghost_pink_move_script(Ghost* ghost, Map* M, Pacman* pacman) {
     if (!movetime(ghost->speed))
         return;
 
     switch (ghost->status) {
     case BLOCKED:
-        ghost_red_move_script_BLOCKED(ghost, M);
+        ghost_pink_move_script_BLOCKED(ghost, M);
         if (al_get_timer_count(game_tick_timer) > GO_OUT_TIME)
             ghost->status = GO_OUT;
         break;
     case FREEDOM:
-        ghost_red_move_script_FREEDOM(ghost, M);
+        ghost_pink_move_script_FREEDOM(ghost, M);
         break;
     case GO_OUT:
         ghost_move_script_GO_OUT(ghost, M);

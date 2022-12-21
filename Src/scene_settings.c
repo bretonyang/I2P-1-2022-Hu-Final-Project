@@ -24,9 +24,12 @@ static int settingsTitleH;
 // inside this scene. They should all have the 'static' prefix.
 
 static void init(void) {
+    // Load title image and get its width and height
     settingsTitle = load_bitmap("Assets/settings_title.png");
     settingsTitleW = al_get_bitmap_width(settingsTitle);
     settingsTitleH = al_get_bitmap_height(settingsTitle);
+
+    // Play settings scene bgm
     stop_bgm(settingsBGM);
     settingsBGM = play_bgm(themeMusic, music_volume);
 }
@@ -36,7 +39,8 @@ static void draw(void ) {
 
     // Draw settings title
     const float title_x = (SCREEN_W - settingsTitleW) >> 1;
-    al_draw_bitmap(settingsTitle, title_x, 50, 0);
+    const float title_y = settingsTitleH >> 1;
+    al_draw_bitmap(settingsTitle, title_x, title_y, 0);
 }
 
 static void destroy() {

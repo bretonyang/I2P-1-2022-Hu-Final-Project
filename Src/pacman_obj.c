@@ -173,17 +173,27 @@ void pacman_draw(Pacman* pman) {
             break;
         }
 
-        // draw 4 frames with 2 different motion images per GAME_TICK_CD
-        switch (pman->objData.moveCD * 4 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 4)
+        /*
+            IDEA of animation (just as a reference in caes I forgot this):
+
+                Basically, the moveCD will drop as the GAME_TICK ticks, and the sprite will move
+            twice per GAME_TICK_CD (this is due to the object's speed is 2, if it's 3 then the object
+            will move three times per GAME_TICK_CD). Since moveCD drops from 64 to 1, we can separate
+            one GAME_TICK_CD into 2 frames to draw by checking whether moceCD is in [64, 32] or [32, 1].
+
+                We then draw 2 different sprite motions from the sprite sheet.
+        */
+
+        // draw 2 different motion images per GAME_TICK_CD
+        switch (pman->objData.moveCD * 2 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 2)
         case 1:
-        case 3:
             al_draw_scaled_bitmap(pman->move_sprite, offset, 0,
                                   16, 16,
                                   drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
                                   draw_region, draw_region, 0
                                  );
             break;
-        default: // For case 0 and 2, we'll draw the second image
+        default: // For case 0, we'll draw the second image
             al_draw_scaled_bitmap(pman->move_sprite, offset + 16, 0,
                                   16, 16,
                                   drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,

@@ -49,9 +49,12 @@ static void init(void) {
     game_over = false;
     game_main_score = 0;
 
+    // For debugging
+     basic_map = create_map("Assets/map_test.txt");
+
     // [TODO]
     // Create map from .txt file and design your own map !!
-    basic_map = create_map("Assets/map_nthu.txt");
+//    basic_map = create_map("Assets/map_nthu.txt");
     if (!basic_map) {
         game_abort("error on creating map");
     }
@@ -128,7 +131,7 @@ static void status_update(void) {
     // Check if all beans are eaten
     if (!basic_map->beansCount) {
         game_log("All beans are eaten");
-        al_rest(3.0);
+        al_rest(1.0);
 
         /// myTODO: Try increasing ghost speed to increase difficulty for next level
 

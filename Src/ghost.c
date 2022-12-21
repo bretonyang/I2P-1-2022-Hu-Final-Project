@@ -66,6 +66,7 @@ Ghost* ghost_create(GhostType flag) {
     }
     return ghost;
 }
+
 void ghost_destroy(Ghost* ghost) {
     // [TODO]
     // free ghost resource
@@ -74,6 +75,10 @@ void ghost_destroy(Ghost* ghost) {
     al_destroy_bitmap(ghost->flee_sprite);
     free(ghost);
 }
+
+/**
+ * Draw the ghost's animatoin according to its facing and moveCD.
+ */
 void ghost_draw(Ghost* ghost) {
     // getDrawArea return the drawing RecArea defined by objData and GAME_TICK_CD
     RecArea drawArea = getDrawArea(ghost->objData, GAME_TICK_CD);

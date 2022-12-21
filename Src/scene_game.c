@@ -28,7 +28,6 @@ static const int power_up_duration = 10;
 static Pacman* pman;
 static Map* basic_map;
 static Ghost** ghosts;
-static char score_text[14]; // at most 14 characters for score text
 bool debug_mode = false;
 bool cheat_mode = false;
 
@@ -99,6 +98,10 @@ static void step(void) {
             ghosts[i]->objData.moveCD -= ghosts[i]->speed;
     }
 }
+
+/**
+ * Checks whether an item was eaten, and handles the corresponding for eating that item.
+ */
 static void checkItem(void) {
     int Grid_x = pman->objData.Coord.x, Grid_y = pman->objData.Coord.y;
     if (Grid_y >= basic_map->row_num - 1 || Grid_y <= 0 || Grid_x >= basic_map->col_num - 1 || Grid_x <= 0)
@@ -110,6 +113,7 @@ static void checkItem(void) {
     case '.':
         pacman_eatItem(pman, '.');
         basic_map->map[Grid_y][Grid_x] = ' ';   // erase beans from map
+        basic_map->beansCount -= 1;             // Update beans count of map
         game_main_score += 10;                  // update score
         break;
     default:
@@ -119,7 +123,19 @@ static void checkItem(void) {
     // erase the item you eat from map
     // be careful no erasing the wall block.
 }
+
 static void status_update(void) {
+    // Check if all beans are eaten
+    if (!basic_map->beansCount) {
+        game_log("All beans are eaten");
+        al_rest(3.0);
+
+        /// myTODO: Increase ghost speed to increase difficulty for next level
+
+        // Restart main game scene
+        game_change_scene(scene_main_create());
+    }
+
     // Check status of each ghost
     for (int i = 0; i < GHOST_NUM; i++) {
         if (ghosts[i]->status == GO_IN)
@@ -140,7 +156,7 @@ static void status_update(void) {
                 getDrawArea(pman->objData, GAME_TICK_CD)
             )
         ) {
-            game_log("collide with ghost\n");
+            game_log("collide with ghost");
             al_rest(1.0);
             pacman_die();
             game_over = true;
@@ -150,7 +166,7 @@ static void status_update(void) {
 }
 
 static void update(void) {
-
+    // end game if game is over.
     if (game_over) {
         /*
         	[TODO]
@@ -167,6 +183,7 @@ static void update(void) {
         return;
     }
 
+    // else update the game
     step();
     checkItem();
     status_update();
@@ -186,13 +203,13 @@ static void draw(void) {
     /*
     	al_draw_text(...);
     */
-    sprintf(score_text, "Score: %d", game_main_score);
-    al_draw_text(
+    al_draw_textf(
         menuFont,
         al_map_rgb(255, 255, 255),
         100, 15,
         ALLEGRO_ALIGN_CENTER,
-        score_text
+        "Score: %d",
+        game_main_score
     );
 
     draw_map(basic_map);
@@ -232,11 +249,11 @@ static void draw_hitboxes(void) {
 }
 
 static void printinfo(void) {
-    game_log("pacman:\n");
-    game_log("coord: %d, %d\n", pman->objData.Coord.x, pman->objData.Coord.y);
-    game_log("PreMove: %d\n", pman->objData.preMove);
-    game_log("NextTryMove: %d\n", pman->objData.nextTryMove);
-    game_log("Speed: %f\n", pman->speed);
+    game_log("pacman:");
+    game_log("coord: %d, %d", pman->objData.Coord.x, pman->objData.Coord.y);
+    game_log("PreMove: %d", pman->objData.preMove);
+    game_log("NextTryMove: %d", pman->objData.nextTryMove);
+    game_log("Speed: %f", pman->speed);
 }
 
 
@@ -271,9 +288,9 @@ static void on_key_down(int key_code) {
     case ALLEGRO_KEY_C:
         cheat_mode = !cheat_mode;
         if (cheat_mode)
-            printf("cheat mode on\n");
+            game_log("cheat mode on");
         else
-            printf("cheat mode off\n");
+            game_log("cheat mode off");
         break;
     case ALLEGRO_KEY_G:
         debug_mode = !debug_mode;

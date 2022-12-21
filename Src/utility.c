@@ -14,6 +14,7 @@ float VOLUME = 1.0;
 extern map_offset_x;
 extern map_offset_y;
 extern block_width, block_height;
+
 ALLEGRO_SAMPLE* load_audio(const char* filename) {
     ALLEGRO_SAMPLE* sample = al_load_sample(filename);
     if (!sample)
@@ -97,6 +98,7 @@ void setRecArea(RecArea* RA, float x, float y, float w, float h) {
     RA->w = w;
     RA->h = h;
 }
+
 // Hakathon
 bool RecAreaOverlap(const RecArea RA,const RecArea RB) {
     // [TODO]
@@ -109,6 +111,7 @@ bool RecAreaOverlap(const RecArea RA,const RecArea RB) {
         return true;
     return false;
 }
+
 RecArea getDrawArea(object obj, uint32_t TOTAL_TICK) {
     // NOTODO
     RecArea target;
@@ -139,11 +142,13 @@ RecArea getDrawArea(object obj, uint32_t TOTAL_TICK) {
 
     return target;
 }
+
 void printRecAreaInfo(const RecArea* RA) {
     // NOTODO
     game_log("RecArea info: \nx: %f, y: %f, h: %f\n",
              RA->x, RA->y, RA->w, RA->h);
 }
+
 void printDirection(const Directions a) {
     // NOTODO
     switch (a) {
@@ -178,6 +183,9 @@ bool movetime(int speed) {
     return (GAME_TICK % (GAME_TICK_CD / speed)) == 0;
 }
 
+/**
+ * Returns a random integer in [a, b].
+ */
 uint32_t generateRandomNumber(uint32_t a, uint32_t b) {
     // NOTODO
     if (b < a)
@@ -185,6 +193,10 @@ uint32_t generateRandomNumber(uint32_t a, uint32_t b) {
 //	srand(time(NULL));
     return rand() % (b - a + 1) + a;
 }
+
+/**
+ * Returns a random double in [0, 1].
+ */
 double generateRandomFloat() {
     // NOTODO
 //	srand(time(NULL));

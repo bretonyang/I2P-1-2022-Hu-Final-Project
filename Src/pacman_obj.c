@@ -17,7 +17,7 @@ static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
 // totally understand the meaning of speed and function
 // `step()` in `scene_game.c`, also the relationship between
 // `speed`, `GAME_TICK`, `GAME_TICK_CD`, `objData->moveCD`.
-static const int basic_speed = 4;
+static const int basic_speed = 4; /// CHANGE THIS BACK to 2
 
 /* Shared variables */
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
@@ -122,7 +122,7 @@ void pacman_draw(Pacman* pman) {
     	hint: use pman->objData.moveCD to determine which frame of the animation to draw, you may refer to discription in ghost_draw in ghost.c
     */
 
-    /*  NOTE:
+    /*  myNOTE:
         1. moveCD will decrease by its speed value when GAME_TICK ticks (i.e. game updates).
         2. moveCD reaches 0 and is reset to GAME_TICK_CD when the pacman is allowed to move
            (i.e. movetime returns true).
@@ -193,6 +193,7 @@ void pacman_draw(Pacman* pman) {
         }
     }
 }
+
 void pacman_move(Pacman* pacman, Map* M) {
     if (!movetime(pacman->speed))
         return;
@@ -233,6 +234,7 @@ void pacman_move(Pacman* pacman, Map* M) {
     pacman->objData.facing = pacman->objData.preMove; // record current facing direction
     pacman->objData.moveCD = GAME_TICK_CD; // reset moveCD
 }
+
 void pacman_eatItem(Pacman* pacman, const char Item) {
     switch (Item) {
     case '.':

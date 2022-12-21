@@ -1,6 +1,10 @@
 #include <allegro5/allegro_primitives.h>
 #include "pacman_obj.h"
 #include "map.h"
+
+/* Global variables */
+const int PMAN_DEATH_ANIM_CD = 64; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
+
 /* Static variables */
 static const int start_grid_x = 25, start_grid_y = 25;		// where to put pacman at the beginning
 static const int fix_draw_pixel_offset_x = -3, fix_draw_pixel_offset_y = -3;  // draw offset
@@ -13,7 +17,7 @@ static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
 // totally understand the meaning of speed and function
 // `step()` in `scene_game.c`, also the relationship between
 // `speed`, `GAME_TICK`, `GAME_TICK_CD`, `objData->moveCD`.
-static const int basic_speed = 2;
+static const int basic_speed = 4;
 
 /* Shared variables */
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
@@ -24,6 +28,10 @@ extern bool game_over;
 extern float effect_volume;
 
 /* Declare static function */
+
+/**
+ * Returns true if targetDirec direction is movable.
+ */
 static bool pacman_movable(Pacman* pacman, Map* M, Directions targetDirec) {
 	// [HACKATHON 1-2]
 	// TODO: Determine if the current direction is movable.
@@ -83,7 +91,7 @@ Pacman* pacman_create() {
 	pman->objData.nextTryMove = NONE;
 	pman->speed = basic_speed;
 
-	pman->death_anim_counter = al_create_timer(1.0f / 64);
+	pman->death_anim_counter = al_create_timer(1.0f / PMAN_DEATH_ANIM_CD);
 	pman->powerUp = false;
 	/* load sprites */
 	pman->move_sprite = load_bitmap("Assets/pacman_move.png");
@@ -119,7 +127,6 @@ void pacman_draw(Pacman* pman) {
         1. moveCD will decrease by its speed value when GAME_TICK ticks (i.e. game updates).
         2. moveCD reaches 0 and is reset to GAME_TICK_CD when the pacman is allowed to move
            (i.e. movetime returns true).
-        3.
 	*/
 	RecArea drawArea = getDrawArea(pman->objData, GAME_TICK_CD);
 
@@ -135,9 +142,21 @@ void pacman_draw(Pacman* pman) {
 		/*
 			hint: instead of using pman->objData.moveCD, use Pacman's death_anim_counter to create animation
 		*/
+		// This will draw all images in 1.5 * PMAN_DEATH_ANIM_CD seconds
+		// Get offset for 12 different images.
+		// Following formula is equivalent to counter / ((3/2)*PMAN_DEATH_ANIM_CD / 12)
+		offset = (al_get_timer_count(pman->death_anim_counter) * 12 * 2 / (PMAN_DEATH_ANIM_CD * 3)) * 16;
+
+		// draw the corresponding death sprite
+		al_draw_scaled_bitmap(pman->die_sprite, offset, 0,
+            16, 16,
+            drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+            draw_region, draw_region, 0
+        );
 	}
 	else {
         // get the bitmap offset by deciding which side pman's facing
+        // NOTE: each bitmap is 16px wide.
         switch(pman->objData.facing) {
             case RIGHT:
                 offset = 0;
@@ -165,7 +184,7 @@ void pacman_draw(Pacman* pman) {
                     draw_region, draw_region, 0
                 );
                 break;
-            default: // case 0 and 2
+            default: // For case 0 and 2, we'll draw the second image
                 al_draw_scaled_bitmap(pman->move_sprite, offset + 16, 0,
                     16, 16,
                     drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
@@ -183,12 +202,14 @@ void pacman_move(Pacman* pacman, Map* M) {
 
 	int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;
 
+	// Record nextMove as preMove if nextMove is valid
 	if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
-		pacman->objData.preMove = pacman->objData.nextTryMove; // record valid nextMove as preMove.
+		pacman->objData.preMove = pacman->objData.nextTryMove;
+    // Don't move if nextTryMove and preMove are both invalid (e.g. when player
 	else if (!pacman_movable(pacman, M, pacman->objData.preMove))
-		return; // Don't move if nextTryMove and preMove are both invalid (e.g. when player
+		return;
 
-    // move pacman according to the recorded valid nextMove
+    // Move pacman according to the recorded valid nextMove
     // or if nextMove is not valid, we'll use the original preMove
 	switch (pacman->objData.preMove)
 	{

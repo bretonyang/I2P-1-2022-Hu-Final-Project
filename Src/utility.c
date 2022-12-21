@@ -108,11 +108,6 @@ bool RecAreaOverlap(const RecArea RA,const RecArea RB) {
 	if ((fmin(RA_x2, RB_x2) > fmax(RA.x, RB.x)) && (fmin(RA_y2, RB_y2) > fmax(RA.y, RB.y)))
 		return true;
 	return false;
-	/*
-		if(...)
-			return true;
-		return false;
-	*/
 }
 RecArea getDrawArea(object obj, uint32_t TOTAL_TICK) {
 	// NOTODO

@@ -18,7 +18,8 @@
 extern const uint32_t GAME_TICK_CD;
 extern uint32_t GAME_TICK;
 extern ALLEGRO_TIMER* game_tick_timer;
-int game_main_Score = 0;
+extern const int PMAN_DEATH_ANIM_CD;
+int game_main_score = 0;
 bool game_over = false;
 
 /* Internal variables*/
@@ -27,6 +28,7 @@ static const int power_up_duration = 10;
 static Pacman* pman;
 static Map* basic_map;
 static Ghost** ghosts;
+static char score_text[14]; // at most 14 characters for score text
 bool debug_mode = false;
 bool cheat_mode = false;
 
@@ -46,10 +48,8 @@ static void draw_hitboxes(void);
 
 static void init(void) {
 	game_over = false;
-	game_main_Score = 0;
+	game_main_score = 0;
 
-	// create map
-    // basic_map = create_map(NULL);
 	// [TODO]
 	// Create map from .txt file and design your own map !!
 	basic_map = create_map("Assets/map_nthu.txt");
@@ -106,22 +106,21 @@ static void checkItem(void) {
 	// [HACKATHON 1-3]
 	// TODO: check which item you are going to eat and use `pacman_eatItem` to deal with it.
 
-	switch (basic_map->map[Grid_y][Grid_x])
-	{
-	case '.':
-		pacman_eatItem(pman, '.');
-	default:
-		break;
+	switch (basic_map->map[Grid_y][Grid_x]) {
+        case '.':
+            pacman_eatItem(pman, '.');
+            basic_map->map[Grid_y][Grid_x] = ' ';   // erase beans from map
+            game_main_score += 10;                  // update score
+            break;
+        default:
+            break;
 	}
-
 	// [HACKATHON 1-4]
 	// erase the item you eat from map
 	// be careful no erasing the wall block.
-	if (basic_map->map[Grid_y][Grid_x] == '.') {
-        basic_map->map[Grid_y][Grid_x] = ' ';
-	}
 }
 static void status_update(void) {
+    // Check status of each ghost
 	for (int i = 0; i < GHOST_NUM; i++) {
 		if (ghosts[i]->status == GO_IN)
 			continue;
@@ -133,10 +132,14 @@ static void status_update(void) {
 		// You should have some branch here if you want to implement power bean mode.
 		// Uncomment Following Code
 
-		// if not cheat_mode and (collision of pacman and ghost)
-		if(!cheat_mode && RecAreaOverlap(getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
-                                   getDrawArea(pman->objData, GAME_TICK_CD)))
-		{
+		// Game over if not cheat_mode and (collision of ghost with pacman)
+		if (
+            !cheat_mode &&
+            RecAreaOverlap(
+                getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
+                getDrawArea(pman->objData, GAME_TICK_CD)
+            )
+        ) {
 			game_log("collide with ghost\n");
 			al_rest(1.0);
 			pacman_die();
@@ -154,6 +157,13 @@ static void update(void) {
 			start pman->death_anim_counter and schedule a game-over event (e.g change scene to menu) after Pacman's death animation finished
 			game_change_scene(...);
 		*/
+		al_start_timer(pman->death_anim_counter);
+
+		// Change scene 2*PMAN_DEATH_ANIM_CD seconds after Pacman's death animation.
+		if (al_get_timer_count(pman->death_anim_counter) >= 2 * PMAN_DEATH_ANIM_CD) {
+            al_stop_timer(pman->death_anim_counter);
+            game_change_scene(scene_menu_create());
+		}
 		return;
 	}
 
@@ -163,6 +173,7 @@ static void update(void) {
 	pacman_move(pman, basic_map);
 	for (int i = 0; i < GHOST_NUM; i++)
 		ghosts[i]->move_script(ghosts[i], basic_map, pman);
+
 }
 
 static void draw(void) {
@@ -175,6 +186,14 @@ static void draw(void) {
 	/*
 		al_draw_text(...);
 	*/
+    sprintf(score_text, "Score: %d", game_main_score);
+	al_draw_text(
+		menuFont,
+		al_map_rgb(255, 255, 255),
+		100, 15,
+		ALLEGRO_ALIGN_CENTER,
+		score_text
+	);
 
 	draw_map(basic_map);
 

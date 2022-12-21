@@ -17,8 +17,6 @@ extern uint32_t GAME_TICK;
 extern uint32_t GAME_TICK_CD;
 extern const int block_width,  block_height;
 /* Internal variables */
-static const int ghost_src_w = 16;
-static const int ghost_src_h = 16;
 static const int fix_draw_pixel_offset_x = -3;
 static const int fix_draw_pixel_offset_y = -3;
 static const int draw_region = 30;
@@ -29,6 +27,7 @@ static const int draw_region = 30;
 // part, you will have more understanding on whole mechanism.
 static const int basic_speed = 2;
 // speed: how many times `movetime` will return true per GAME_TICK_CD
+// (i.e. # of moves allowed per GAME_TICK_CD)
 
 /**
  * Create a ghost of GhostType `flag`.
@@ -119,6 +118,7 @@ void ghost_draw(Ghost* ghost) {
 	}
 	else {
         // decide which image to apply in bitmap
+        // NOTE: each bitmap is 16px wide.
 		switch (ghost->objData.facing) {
             case RIGHT:
                 bitmap_x_offset = 0;

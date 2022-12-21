@@ -9,7 +9,7 @@
 // but you want to (should) prevent mutually include dependency.
 // Only applicable when you only need the declaration but no need the definition in you sturct,
 // which means that you only used the struct as pointer(no access to struct data), param, return type in this file.
-// If you have to access the data in struct ex. `A->data`, 
+// If you have to access the data in struct ex. `A->data`,
 // you should include the corresponding header file for its definition.
 // Advance reading : https://stackoverflow.com/questions/18658438/what-is-forward-declaration-and-the-difference-between-typedef-struct-x-and
 
@@ -17,7 +17,6 @@ typedef struct Ghost Ghost;
 typedef struct Map Map;
 
 typedef struct Pacman{
-
 	bitmapdata imgdata;
 	object objData;
 	func_ptr move;
@@ -27,6 +26,9 @@ typedef struct Pacman{
 	ALLEGRO_BITMAP* move_sprite;
 	ALLEGRO_BITMAP* die_sprite;
 } Pacman;
+
+/* Global variables */
+extern const int PMAN_DEATH_ANIM_CD; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
 
 Pacman* pacman_create();
 void pacman_destroy(Pacman* pman);

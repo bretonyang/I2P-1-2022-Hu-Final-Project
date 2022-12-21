@@ -33,19 +33,18 @@ extern float effect_volume;
  * Returns true if targetDirec direction is movable.
  */
 static bool pacman_movable(Pacman* pacman, Map* M, Directions targetDirec) {
-	// [HACKATHON 1-2]
-	// TODO: Determine if the current direction is movable.
-	// That is to say, your pacman shouldn't penetrate 'wall' and 'room'
-	// , where room is reserved for ghost to set up.
-	// 1) For the current direction `targetDirec`, use pre-implemented function
-	// `is_wall_block` and `is_room_block` to check if the block is wall or room. (they are both defined in map.c)
-	// 2) the coordinate data of pacman is stored in pacman->objData.Coord
-	// it is a self-defined pair IntInt type. Trace the code and utilize it.
+    // [HACKATHON 1-2]
+    // TODO: Determine if the current direction is movable.
+    // That is to say, your pacman shouldn't penetrate 'wall' and 'room'
+    // , where room is reserved for ghost to set up.
+    // 1) For the current direction `targetDirec`, use pre-implemented function
+    // `is_wall_block` and `is_room_block` to check if the block is wall or room. (they are both defined in map.c)
+    // 2) the coordinate data of pacman is stored in pacman->objData.Coord
+    // it is a self-defined pair IntInt type. Trace the code and utilize it.
 
-	int next_x = pacman->objData.Coord.x, next_y= pacman->objData.Coord.y;
+    int next_x = pacman->objData.Coord.x, next_y= pacman->objData.Coord.y;
 
-	switch (targetDirec)
-	{
+    switch (targetDirec) {
     case UP:
         next_y -= 1;
         break;
@@ -61,199 +60,197 @@ static bool pacman_movable(Pacman* pacman, Map* M, Directions targetDirec) {
     default:
         // for none UP, DOWN, LEFT, RIGHT direction u should return false.
         return false;
-	}
-	if (is_wall_block(M, next_x, next_y) || is_room_block(M, next_x, next_y))
-		return false;
+    }
+    if (is_wall_block(M, next_x, next_y) || is_room_block(M, next_x, next_y))
+        return false;
 
-	return true;
+    return true;
 }
 
 Pacman* pacman_create() {
 
-	/*
-		[TODO]
-		Allocate dynamic memory for pman pointer;
-	*/
-	Pacman* pman = (Pacman*)malloc(sizeof(Pacman));
-	if (!pman)
-		return NULL;
+    /*
+    	[TODO]
+    	Allocate dynamic memory for pman pointer;
+    */
+    Pacman* pman = (Pacman*)malloc(sizeof(Pacman));
+    if (!pman)
+        return NULL;
 
-	/* Init pman data */
-	/* set starting point, Size, */
-	/* TODO? */
-	/* hint / just put it */
-	pman->objData.Coord.x = 24;
-	pman->objData.Coord.y = 24;
-	pman->objData.Size.x = block_width;
-	pman->objData.Size.y = block_height;
+    /* Init pman data */
+    /* set starting point, Size, */
+    /* TODO? */
+    /* hint / just put it */
+    pman->objData.Coord.x = 24;
+    pman->objData.Coord.y = 24;
+    pman->objData.Size.x = block_width;
+    pman->objData.Size.y = block_height;
 
-	pman->objData.preMove = NONE;
-	pman->objData.nextTryMove = NONE;
-	pman->speed = basic_speed;
+    pman->objData.preMove = NONE;
+    pman->objData.nextTryMove = NONE;
+    pman->speed = basic_speed;
 
-	pman->death_anim_counter = al_create_timer(1.0f / PMAN_DEATH_ANIM_CD);
-	pman->powerUp = false;
-	/* load sprites */
-	pman->move_sprite = load_bitmap("Assets/pacman_move.png");
-	pman->die_sprite = load_bitmap("Assets/pacman_die.png");
-	return pman;
+    pman->death_anim_counter = al_create_timer(1.0f / PMAN_DEATH_ANIM_CD);
+    pman->powerUp = false;
+    /* load sprites */
+    pman->move_sprite = load_bitmap("Assets/pacman_move.png");
+    pman->die_sprite = load_bitmap("Assets/pacman_die.png");
+    return pman;
 
 }
 
 void pacman_destroy(Pacman* pman) {
-	/*
-		[TODO]
-		free pacman resource
-		al_destroy_bitmap(pman->...);
-		al_destroy_timer(pman->...);
-		...
-		free(pman);
-	*/
-	al_destroy_bitmap(pman->move_sprite);
-	al_destroy_bitmap(pman->die_sprite);
-	al_destroy_timer(pman->death_anim_counter);
-	free(pman);
+    /*
+    	[TODO]
+    	free pacman resource
+    	al_destroy_bitmap(pman->...);
+    	al_destroy_timer(pman->...);
+    	...
+    	free(pman);
+    */
+    al_destroy_bitmap(pman->move_sprite);
+    al_destroy_bitmap(pman->die_sprite);
+    al_destroy_timer(pman->death_anim_counter);
+    free(pman);
 }
 
 
 void pacman_draw(Pacman* pman) {
-	/*
+    /*
         [HW-TODO]
-		Draw Pacman and animations
-		hint: use pman->objData.moveCD to determine which frame of the animation to draw, you may refer to discription in ghost_draw in ghost.c
-	*/
+    	Draw Pacman and animations
+    	hint: use pman->objData.moveCD to determine which frame of the animation to draw, you may refer to discription in ghost_draw in ghost.c
+    */
 
-	/*  NOTE:
+    /*  NOTE:
         1. moveCD will decrease by its speed value when GAME_TICK ticks (i.e. game updates).
         2. moveCD reaches 0 and is reset to GAME_TICK_CD when the pacman is allowed to move
            (i.e. movetime returns true).
-	*/
-	RecArea drawArea = getDrawArea(pman->objData, GAME_TICK_CD);
+    */
+    RecArea drawArea = getDrawArea(pman->objData, GAME_TICK_CD);
 
-	//Draw default image
+    //Draw default image
 //	al_draw_scaled_bitmap(pman->move_sprite, 0, 0,
 //		16, 16,
 //		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
 //		draw_region, draw_region, 0
 //	);
 
-	int offset = 0;
-	if (game_over) {
-		/*
-			hint: instead of using pman->objData.moveCD, use Pacman's death_anim_counter to create animation
-		*/
-		// This will draw all images in 1.5 * PMAN_DEATH_ANIM_CD seconds
-		// Get offset for 12 different images.
-		// Following formula is equivalent to counter / ((3/2)*PMAN_DEATH_ANIM_CD / 12)
-		offset = (al_get_timer_count(pman->death_anim_counter) * 12 * 2 / (PMAN_DEATH_ANIM_CD * 3)) * 16;
+    int offset = 0;
+    if (game_over) {
+        /*
+        	hint: instead of using pman->objData.moveCD, use Pacman's death_anim_counter to create animation
+        */
+        // This will draw all images in 1.5 * PMAN_DEATH_ANIM_CD seconds
+        // Get offset for 12 different images.
+        // Following formula is equivalent to counter / ((3/2)*PMAN_DEATH_ANIM_CD / 12)
+        offset = (al_get_timer_count(pman->death_anim_counter) * 12 * 2 / (PMAN_DEATH_ANIM_CD * 3)) * 16;
 
-		// draw the corresponding death sprite
-		al_draw_scaled_bitmap(pman->die_sprite, offset, 0,
-            16, 16,
-            drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-            draw_region, draw_region, 0
-        );
-	}
-	else {
+        // draw the corresponding death sprite
+        al_draw_scaled_bitmap(pman->die_sprite, offset, 0,
+                              16, 16,
+                              drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                              draw_region, draw_region, 0
+                             );
+    }
+    else {
         // get the bitmap offset by deciding which side pman's facing
         // NOTE: each bitmap is 16px wide.
         switch(pman->objData.facing) {
-            case RIGHT:
-                offset = 0;
-                break;
-            case LEFT:
-                offset = 32;
-                break;
-            case UP:
-                offset = 64;
-                break;
-            case DOWN:
-                offset = 96;
-                break;
-            default:
-                break;
+        case RIGHT:
+            offset = 0;
+            break;
+        case LEFT:
+            offset = 32;
+            break;
+        case UP:
+            offset = 64;
+            break;
+        case DOWN:
+            offset = 96;
+            break;
+        default:
+            break;
         }
 
         // draw 4 frames with 2 different motion images per GAME_TICK_CD
         switch (pman->objData.moveCD * 4 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 4)
-            case 1:
-            case 3:
-                al_draw_scaled_bitmap(pman->move_sprite, offset, 0,
-                    16, 16,
-                    drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-                    draw_region, draw_region, 0
-                );
-                break;
-            default: // For case 0 and 2, we'll draw the second image
-                al_draw_scaled_bitmap(pman->move_sprite, offset + 16, 0,
-                    16, 16,
-                    drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-                    draw_region, draw_region, 0
-                );
-                break;
+        case 1:
+        case 3:
+            al_draw_scaled_bitmap(pman->move_sprite, offset, 0,
+                                  16, 16,
+                                  drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                                  draw_region, draw_region, 0
+                                 );
+            break;
+        default: // For case 0 and 2, we'll draw the second image
+            al_draw_scaled_bitmap(pman->move_sprite, offset + 16, 0,
+                                  16, 16,
+                                  drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                                  draw_region, draw_region, 0
+                                 );
+            break;
         }
-	}
+    }
 }
 void pacman_move(Pacman* pacman, Map* M) {
-	if (!movetime(pacman->speed))
-		return;
-	if (game_over)
-		return;
+    if (!movetime(pacman->speed))
+        return;
+    if (game_over)
+        return;
 
-	int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;
+    int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;
 
-	// Record nextMove as preMove if nextMove is valid
-	if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
-		pacman->objData.preMove = pacman->objData.nextTryMove;
+    // Record nextMove as preMove if nextMove is valid
+    if (pacman_movable(pacman, M, pacman->objData.nextTryMove))
+        pacman->objData.preMove = pacman->objData.nextTryMove;
     // Don't move if nextTryMove and preMove are both invalid (e.g. when player
-	else if (!pacman_movable(pacman, M, pacman->objData.preMove))
-		return;
+    else if (!pacman_movable(pacman, M, pacman->objData.preMove))
+        return;
 
     // Move pacman according to the recorded valid nextMove
     // or if nextMove is not valid, we'll use the original preMove
-	switch (pacman->objData.preMove)
-	{
-	case UP:
-		pacman->objData.Coord.y -= 1;
-		pacman->objData.preMove = UP;
-		break;
-	case DOWN:
-		pacman->objData.Coord.y += 1;
-		pacman->objData.preMove = DOWN;
-		break;
-	case LEFT:
-		pacman->objData.Coord.x -= 1;
-		pacman->objData.preMove = LEFT;
-		break;
-	case RIGHT:
-		pacman->objData.Coord.x += 1;
-		pacman->objData.preMove = RIGHT;
-		break;
-	default:
-		break;
-	}
-	pacman->objData.facing = pacman->objData.preMove; // record current facing direction
-	pacman->objData.moveCD = GAME_TICK_CD; // reset moveCD
+    switch (pacman->objData.preMove) {
+    case UP:
+        pacman->objData.Coord.y -= 1;
+        pacman->objData.preMove = UP;
+        break;
+    case DOWN:
+        pacman->objData.Coord.y += 1;
+        pacman->objData.preMove = DOWN;
+        break;
+    case LEFT:
+        pacman->objData.Coord.x -= 1;
+        pacman->objData.preMove = LEFT;
+        break;
+    case RIGHT:
+        pacman->objData.Coord.x += 1;
+        pacman->objData.preMove = RIGHT;
+        break;
+    default:
+        break;
+    }
+    pacman->objData.facing = pacman->objData.preMove; // record current facing direction
+    pacman->objData.moveCD = GAME_TICK_CD; // reset moveCD
 }
 void pacman_eatItem(Pacman* pacman, const char Item) {
-	switch (Item)
-	{
-	case '.':
-		stop_bgm(PACMAN_MOVESOUND_ID);
-		PACMAN_MOVESOUND_ID = play_audio(PACMAN_MOVESOUND, effect_volume);
-		break;
-	default:
-		break;
-	}
+    switch (Item) {
+    case '.':
+        stop_bgm(PACMAN_MOVESOUND_ID);
+        PACMAN_MOVESOUND_ID = play_audio(PACMAN_MOVESOUND, effect_volume);
+        break;
+    default:
+        break;
+    }
 }
 
 void pacman_NextMove(Pacman* pacman, Directions next) {
-	pacman->objData.nextTryMove = next;
+    pacman->objData.nextTryMove = next;
 }
 
 void pacman_die() {
-	stop_bgm(PACMAN_MOVESOUND_ID);
-	PACMAN_MOVESOUND_ID = play_audio(PACMAN_DEATH_SOUND, effect_volume);
+    stop_bgm(PACMAN_MOVESOUND_ID);
+    PACMAN_MOVESOUND_ID = play_audio(PACMAN_DEATH_SOUND, effect_volume);
 }
 
 

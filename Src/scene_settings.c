@@ -14,16 +14,16 @@
 // TODO: More variables and functions that will only be accessed
 // inside this scene. They should all have the 'static' prefix.
 
-static void draw(void ){
-	al_clear_to_color(al_map_rgb(0, 0, 0));
+static void draw(void ) {
+    al_clear_to_color(al_map_rgb(0, 0, 0));
 }
 // The only function that is shared across files.
 Scene scene_settings_create(void) {
-	Scene scene;
-	memset(&scene, 0, sizeof(Scene));
-	scene.name = "Settings";
-	scene.draw = &draw;
-	// TODO: Register more event callback functions such as keyboard, mouse, ...
-	game_log("Settings scene created");
-	return scene;
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+    scene.name = "Settings";
+    scene.draw = &draw;
+    // TODO: Register more event callback functions such as keyboard, mouse, ...
+    game_log("Settings scene created");
+    return scene;
 }

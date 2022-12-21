@@ -27,49 +27,49 @@ static int gameTitleH ;
 //	[HACKATHON 3-1]
 //	TODO: Declare variable for button
 //	Uncomment and fill the code below
- static Button btnSettings;
+static Button btnSettings;
 
 static void init() {
 
-	// [HACKATHON 3-2]
-	// TODO: Create button to settings
-	//	Uncomment and fill the code below
-	btnSettings = button_create(730, 20, 50, 50, "Assets/settings.png", "Assets/settings2.png");
+    // [HACKATHON 3-2]
+    // TODO: Create button to settings
+    //	Uncomment and fill the code below
+    btnSettings = button_create(730, 20, 50, 50, "Assets/settings.png", "Assets/settings2.png");
 
-	gameTitle = load_bitmap("Assets/title.png");
-	gameTitleW = al_get_bitmap_width(gameTitle);
-	gameTitleH = al_get_bitmap_height(gameTitle);
-	stop_bgm(menuBGM);
-	menuBGM = play_bgm(themeMusic, music_volume);
+    gameTitle = load_bitmap("Assets/title.png");
+    gameTitleW = al_get_bitmap_width(gameTitle);
+    gameTitleH = al_get_bitmap_height(gameTitle);
+    stop_bgm(menuBGM);
+    menuBGM = play_bgm(themeMusic, music_volume);
 
 }
 
 
 static void draw() {
 
-	al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_clear_to_color(al_map_rgb(0, 0, 0));
 
-	const float scale = 0.7;
-	const float offset_w = (SCREEN_W >> 1) - 0.5 * scale * gameTitleW;
-	const float offset_h = (SCREEN_H >> 1) - 0.5 * scale * gameTitleH;
+    const float scale = 0.7;
+    const float offset_w = (SCREEN_W >> 1) - 0.5 * scale * gameTitleW;
+    const float offset_h = (SCREEN_H >> 1) - 0.5 * scale * gameTitleH;
 
-	//draw title image
-	al_draw_scaled_bitmap(
-		gameTitle,
-		0, 0,
-		gameTitleW, gameTitleH,
-		offset_w, offset_h,
-		gameTitleW * scale, gameTitleH * scale,
-		0
-	);
-	al_draw_text(
-		menuFont,
-		al_map_rgb(255, 255, 255),
-		SCREEN_W/2,
-		SCREEN_H - 150,
-		ALLEGRO_ALIGN_CENTER,
-		"PRESS \"ENTER\""
-	);
+    //draw title image
+    al_draw_scaled_bitmap(
+        gameTitle,
+        0, 0,
+        gameTitleW, gameTitleH,
+        offset_w, offset_h,
+        gameTitleW * scale, gameTitleH * scale,
+        0
+    );
+    al_draw_text(
+        menuFont,
+        al_map_rgb(255, 255, 255),
+        SCREEN_W/2,
+        SCREEN_H - 150,
+        ALLEGRO_ALIGN_CENTER,
+        "PRESS \"ENTER\""
+    );
 
     // [HACKATHON 3-3]
     // TODO: Draw button
@@ -79,9 +79,9 @@ static void draw() {
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
-	//	[HACKATHON 3-7]
-	//	TODO: Update button's status(hovered), and utilize the function `pnt_in_rect`, which you just implemented
-	//	Uncomment and fill the code below
+    //	[HACKATHON 3-7]
+    //	TODO: Update button's status(hovered), and utilize the function `pnt_in_rect`, which you just implemented
+    //	Uncomment and fill the code below
     btnSettings.hovered = buttonHover(btnSettings, mouse_x, mouse_y);
 }
 
@@ -97,31 +97,31 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 // 	      `Enter the setting scene`
 //	Uncomment and fill the code below
 static void on_mouse_down() {
-	if (btnSettings.hovered)
-		game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
+    if (btnSettings.hovered)
+        game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
 }
 
 
 static void destroy() {
-	stop_bgm(menuBGM);
-	al_destroy_bitmap(gameTitle);
-	//	[HACKATHON 3-10]
-	//	TODO: Destroy button images
-	//	Uncomment and fill the code below
-	al_destroy_bitmap(btnSettings.default_img);
-	al_destroy_bitmap(btnSettings.hovered_img);
+    stop_bgm(menuBGM);
+    al_destroy_bitmap(gameTitle);
+    //	[HACKATHON 3-10]
+    //	TODO: Destroy button images
+    //	Uncomment and fill the code below
+    al_destroy_bitmap(btnSettings.default_img);
+    al_destroy_bitmap(btnSettings.hovered_img);
 
 }
 
 static void on_key_down(int keycode) {
 
-	switch (keycode) {
-		case ALLEGRO_KEY_ENTER:
-			game_change_scene(scene_main_create());
-			break;
-		default:
-			break;
-	}
+    switch (keycode) {
+    case ALLEGRO_KEY_ENTER:
+        game_change_scene(scene_main_create());
+        break;
+    default:
+        break;
+    }
 }
 
 // TODO: Add more event callback functions such as update, ...
@@ -133,24 +133,24 @@ static void on_key_down(int keycode) {
 // The only function that is shared across files.
 Scene scene_menu_create(void) {
 
-	Scene scene;
-	memset(&scene, 0, sizeof(Scene));
-	scene.name = "Menu";
-	scene.initialize = &init;
-	scene.draw = &draw;
-	scene.destroy = &destroy;
-	scene.on_key_down = &on_key_down;
-	scene.on_mouse_move = &on_mouse_move;
-	// [HACKATHON 3-9]
-	// TODO: Register on_mouse_down.
-	// Uncomment the code below.
-	scene.on_mouse_down = &on_mouse_down;
+    Scene scene;
+    memset(&scene, 0, sizeof(Scene));
+    scene.name = "Menu";
+    scene.initialize = &init;
+    scene.draw = &draw;
+    scene.destroy = &destroy;
+    scene.on_key_down = &on_key_down;
+    scene.on_mouse_move = &on_mouse_move;
+    // [HACKATHON 3-9]
+    // TODO: Register on_mouse_down.
+    // Uncomment the code below.
+    scene.on_mouse_down = &on_mouse_down;
 
-	// -------------------------------------
+    // -------------------------------------
 
 
 
-	// TODO: Register more event callback functions such as keyboard, mouse, ...
-	game_log("Menu scene created");
-	return scene;
+    // TODO: Register more event callback functions such as keyboard, mouse, ...
+    game_log("Menu scene created");
+    return scene;
 }

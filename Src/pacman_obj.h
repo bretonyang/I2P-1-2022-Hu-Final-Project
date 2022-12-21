@@ -16,15 +16,15 @@
 typedef struct Ghost Ghost;
 typedef struct Map Map;
 
-typedef struct Pacman{
-	bitmapdata imgdata;
-	object objData;
-	func_ptr move;
-	int speed;
-	bool powerUp;
-	ALLEGRO_TIMER* death_anim_counter;
-	ALLEGRO_BITMAP* move_sprite;
-	ALLEGRO_BITMAP* die_sprite;
+typedef struct Pacman {
+    bitmapdata imgdata;
+    object objData;
+    func_ptr move;
+    int speed;
+    bool powerUp;
+    ALLEGRO_TIMER* death_anim_counter;
+    ALLEGRO_BITMAP* move_sprite;
+    ALLEGRO_BITMAP* die_sprite;
 } Pacman;
 
 /* Global variables */

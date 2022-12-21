@@ -15,32 +15,32 @@ typedef struct Pacman Pacman;
 typedef struct Map Map;
 
 typedef enum {
-	BLOCKED,						 // stay inside the ghost room
-	GO_OUT,							 // going out the ghost room
-	FREEDOM,					     // free at the map
-	GO_IN,							 // going back to the ghost room
-	FLEE							 // pacman powered up
+    BLOCKED,						 // stay inside the ghost room
+    GO_OUT,							 // going out the ghost room
+    FREEDOM,					     // free at the map
+    GO_IN,							 // going back to the ghost room
+    FLEE							 // pacman powered up
 } GhostStatus;
 
 typedef enum {
-	Blinky,
-	Pinky,
-	Inky,
-	Clyde
+    Blinky,
+    Pinky,
+    Inky,
+    Clyde
 } GhostType;
 
 
-typedef struct Ghost{
-	bitmapdata imgdata;
-	object objData;
-	script_func_ptr move_script;
-	int speed;
-	int64_t previous_timer_val;
-	GhostType typeFlag;
-	GhostStatus status;
-	ALLEGRO_BITMAP* move_sprite;
-	ALLEGRO_BITMAP* flee_sprite;
-	ALLEGRO_BITMAP* dead_sprite;
+typedef struct Ghost {
+    bitmapdata imgdata;
+    object objData;
+    script_func_ptr move_script;
+    int speed;
+    int64_t previous_timer_val;
+    GhostType typeFlag;
+    GhostStatus status;
+    ALLEGRO_BITMAP* move_sprite;
+    ALLEGRO_BITMAP* flee_sprite;
+    ALLEGRO_BITMAP* dead_sprite;
 } Ghost;
 
 Ghost* ghost_create(GhostType flag);

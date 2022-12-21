@@ -133,7 +133,7 @@ static void status_update(void) {
         /// myTODO: Increase ghost speed to increase difficulty for next level
 
         // Restart main game scene
-        game_change_scene(scene_main_create());
+        game_change_scene(scene_menu_create());
     }
 
     // Check status of each ghost

@@ -117,7 +117,12 @@ static void on_key_down(int keycode) {
 
     switch (keycode) {
     case ALLEGRO_KEY_ENTER:
+        // Change to game scene when "ENTER" pressed
         game_change_scene(scene_main_create());
+        break;
+    case ALLEGRO_KEY_ESCAPE:
+        // Change to settings scene when "ESCAPE" pressed
+        game_change_scene(scene_settings_create());
         break;
     default:
         break;

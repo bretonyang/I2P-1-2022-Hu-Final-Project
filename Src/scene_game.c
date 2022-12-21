@@ -130,9 +130,9 @@ static void status_update(void) {
         game_log("All beans are eaten");
         al_rest(3.0);
 
-        /// myTODO: Increase ghost speed to increase difficulty for next level
+        /// myTODO: Try increasing ghost speed to increase difficulty for next level
 
-        // Restart main game scene
+        // Go back to menu scene
         game_change_scene(scene_menu_create());
     }
 

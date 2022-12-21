@@ -31,10 +31,9 @@ Button button_create(float x, float y, float w, float h, const char* default_ima
 
 void drawButton(Button button) {
     ALLEGRO_BITMAP* _img = button.hovered_img ?
-                           button.hovered ?
-                           button.hovered_img :
-                           button.default_img :
+                           (button.hovered ? button.hovered_img : button.default_img) :
                            button.default_img;
+
     al_draw_scaled_bitmap(
         _img,
         0, 0,

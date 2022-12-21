@@ -17,6 +17,7 @@
 static void draw(void ) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 }
+
 // The only function that is shared across files.
 Scene scene_settings_create(void) {
     Scene scene;

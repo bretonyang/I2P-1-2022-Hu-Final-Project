@@ -4,6 +4,7 @@
 
 /* Global variables */
 const int PMAN_DEATH_ANIM_CD = 64; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
+const int PMAN_WIN_ANIM_CD = 64; // Pacman's winning animation counter CD
 
 /* Static variables */
 static const int start_grid_x = 25, start_grid_y = 25;		// where to put pacman at the beginning
@@ -92,10 +93,20 @@ Pacman* pacman_create() {
     pman->speed = basic_speed;
 
     pman->death_anim_counter = al_create_timer(1.0f / PMAN_DEATH_ANIM_CD);
+    if (pman->death_anim_counter == NULL) {
+        game_abort("failed to create pman->death_anim_counter");
+    }
+    pman->win_anim_counter = al_create_timer(1.0f / PMAN_WIN_ANIM_CD);
+    if (pman->win_anim_counter == NULL) {
+        game_abort("failed to create pman->win_anim_counter");
+    }
+
     pman->powerUp = false;
+
     /* load sprites */
     pman->move_sprite = load_bitmap("Assets/pacman_move.png");
     pman->die_sprite = load_bitmap("Assets/pacman_die.png");
+    pman->win_sprite = load_bitmap("Assets/pacman_win.png");
     return pman;
 
 }
@@ -111,7 +122,9 @@ void pacman_destroy(Pacman* pman) {
     */
     al_destroy_bitmap(pman->move_sprite);
     al_destroy_bitmap(pman->die_sprite);
+    al_destroy_bitmap(pman->win_sprite);
     al_destroy_timer(pman->death_anim_counter);
+    al_destroy_timer(pman->win_anim_counter);
     free(pman);
 }
 
@@ -153,6 +166,16 @@ void pacman_draw(Pacman* pman) {
                               drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
                               draw_region, draw_region, 0
                              );
+    }
+    // draw the win_sprite after PMAN_WIN_ANIM_CD / 2 win_timer ticks
+    else if (game_win && al_get_timer_count(pman->win_anim_counter) >= PMAN_WIN_ANIM_CD >> 1) {
+        // draw winning animation
+        al_draw_scaled_bitmap(pman->win_sprite, offset, 0,
+                          16, 16,
+                          drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                          draw_region, draw_region, 0
+                         );
+
     }
     else {
         // get the bitmap offset by deciding which side pman's facing
@@ -209,6 +232,12 @@ void pacman_move(Pacman* pacman, Map* M) {
     if (!movetime(pacman->speed))
         return;
     if (game_over)
+        return;
+
+    // Stop moving the pacman when win_timer ticks >= (PMAN_WIN_ANIM_CD / (pacman->speed << 2))
+    // This creates animation where pacman eats the bean and stops moving at exactly the eaten bean's position.
+    // This works for speeds that are powers of 2.
+    if (game_win && al_get_timer_count(pacman->win_anim_counter) >= (PMAN_WIN_ANIM_CD / (pacman->speed << 2)))
         return;
 
     int probe_x = pacman->objData.Coord.x, probe_y = pacman->objData.Coord.y;

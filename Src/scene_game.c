@@ -130,7 +130,6 @@ static void status_update(void) {
     // Check if all beans are eaten
     if (!basic_map->beansCount) {
         game_log("All beans are eaten");
-        al_rest(1.0);
         pacman_win();
         game_win = true;
     }
@@ -174,7 +173,7 @@ static void update(void) {
         */
         al_start_timer(pman->death_anim_counter);
 
-        // Change scene 2*PMAN_DEATH_ANIM_CD seconds after Pacman's death animation.
+        // Change scene 2*PMAN_DEATH_ANIM_CD ticks after Pacman's death animation.
         if (al_get_timer_count(pman->death_anim_counter) >= 2 * PMAN_DEATH_ANIM_CD) {
             al_stop_timer(pman->death_anim_counter);
             game_change_scene(scene_menu_create());
@@ -183,9 +182,21 @@ static void update(void) {
     }
     else if (game_win) {
         /// TODO: start winning timer to create animation
+        al_start_timer(pman->win_anim_counter);
 
-        // Go back to menu scene
-        game_change_scene(scene_menu_create());
+        if (al_get_timer_count(pman->win_anim_counter) >= 2 * PMAN_WIN_ANIM_CD) {
+            al_stop_timer(pman->win_anim_counter);
+
+            // Go back to menu scene
+            game_change_scene(scene_menu_create());
+        }
+        else {
+            step();
+            checkItem();
+            pacman_move(pman, basic_map);
+        }
+
+        return;
     }
 
     // else update the game

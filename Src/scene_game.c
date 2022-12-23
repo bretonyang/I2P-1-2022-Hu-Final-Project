@@ -16,12 +16,9 @@
 #define GHOST_NUM 3
 
 /* global variables*/
-extern const uint32_t GAME_TICK_CD;
-extern uint32_t GAME_TICK;
-extern ALLEGRO_TIMER* game_tick_timer;
-extern const int PMAN_DEATH_ANIM_CD;
 int game_main_score = 0;
 bool game_over = false;
+bool game_win = false;
 
 /* Internal variables*/
 static ALLEGRO_TIMER* power_up_timer;
@@ -29,8 +26,8 @@ static const int power_up_duration = 10;
 static Pacman* pman;
 static Map* basic_map;
 static Ghost** ghosts;
-bool debug_mode = false;
-bool cheat_mode = false;
+static bool debug_mode = false;
+static bool cheat_mode = false;
 
 /* Declare static function prototypes */
 static void init(void);
@@ -52,7 +49,7 @@ static void init(void) {
     game_main_score = 0;
 
     // For debugging
-     basic_map = create_map("Assets/map_test.txt");
+    basic_map = create_map("Assets/map_test.txt");
 
     // [TODO]
     // Create map from .txt file and design your own map !!
@@ -134,11 +131,8 @@ static void status_update(void) {
     if (!basic_map->beansCount) {
         game_log("All beans are eaten");
         al_rest(1.0);
-
-        /// myTODO: Try increasing ghost speed to increase difficulty for next level
-
-        // Go back to menu scene
-        game_change_scene(scene_menu_create());
+        pacman_win();
+        game_win = true;
     }
 
     // Check status of each ghost
@@ -187,6 +181,12 @@ static void update(void) {
         }
         return;
     }
+    else if (game_win) {
+        /// TODO: start winning timer to create animation
+
+        // Go back to menu scene
+        game_change_scene(scene_menu_create());
+    }
 
     // else update the game
     step();
@@ -201,7 +201,6 @@ static void update(void) {
 static void draw(void) {
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
-
 
     //	[TODO]
     //	Draw scoreboard, something you may need is sprinf();

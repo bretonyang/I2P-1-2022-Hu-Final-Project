@@ -218,11 +218,11 @@ void draw_map(Map const* M) {
                 break;
             // [ TODO ]
             // draw the power bean
-            /*
+
             case 'P':
-            	draw_power_bean(...);
+            	draw_power_bean(M, row, col);
             	break;
-            */
+
             case '.':
                 draw_bean(M, row, col);
                 break;
@@ -231,20 +231,7 @@ void draw_map(Map const* M) {
             }
         }
     }
-    /*
-    	for(...){
-    		for(...)
-    			switch(M->map[][])
-    			{
-    			case '#':
-    				...
-    			case '.':
-    				...
-    			case 'P':
-    				...
-    			}
-    	}
-    */
+
 }
 
 static void draw_block_index(Map* M, const int row, const int col) {
@@ -267,14 +254,19 @@ static void draw_block_index(Map* M, const int row, const int col) {
         e_y = s_y + dw;
 
         al_draw_filled_rectangle(s_x, s_y,
-                                 e_x, e_y, al_map_rgb(25, 154, 25));
+                                 e_x, e_y, al_map_rgb(25, 25, 166));
+//        al_draw_filled_rectangle(s_x, s_y,
+//                                 e_x, e_y, al_map_rgb(25, 154, 25));
+
         if (row < M->row_num - 1 && B && !(BL && BR && R && L)) {
             s_x = block_x + dw;
             s_y = block_y + dw;
             e_x = s_x + dw;
             e_y = block_y + block_height;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 154, 25));
+                                     e_x, e_y, al_map_rgb(25, 25, 166));
+//            al_draw_filled_rectangle(s_x, s_y,
+//                                     e_x, e_y, al_map_rgb(25, 154, 25));
         }
         if (row > 0 && U && !(UL && UR && R && L)) {
             s_x = block_x + dw;
@@ -282,7 +274,9 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = s_x + dw;
             e_y = block_y;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 154, 25));
+                                     e_x, e_y, al_map_rgb(25, 25, 166));
+//            al_draw_filled_rectangle(s_x, s_y,
+//                                     e_x, e_y, al_map_rgb(25, 154, 25));
         }
         if (col < M->col_num - 1 && R && !(UR && BR && U && B)) {
             s_x = block_x + dw;
@@ -290,7 +284,9 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = block_x + block_width;
             e_y = s_y + dw;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 154, 25));
+                                     e_x, e_y, al_map_rgb(25, 25, 166));
+//            al_draw_filled_rectangle(s_x, s_y,
+//                                     e_x, e_y, al_map_rgb(25, 154, 25));
 
         }
         if (col > 0 && L && !(UL && BL && U && B)) {
@@ -299,7 +295,9 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = s_x + (dw << 1);
             e_y = s_y + dw;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 154, 25));
+                                     e_x, e_y, al_map_rgb(25, 25, 166));
+//             al_draw_filled_rectangle(s_x, s_y,
+//                                      e_x, e_y, al_map_rgb(25, 154, 25));
         }
     }
 }
@@ -307,7 +305,10 @@ static void draw_block_index(Map* M, const int row, const int col) {
 static void draw_bean(Map* M, const int row, const int col) {
     al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0,
                           map_offset_y + row * block_height + block_height / 2.0,
-                          block_width/6.0,  al_map_rgb(234, 38, 38));
+                          block_width/6.0,  al_map_rgb(255, 216, 168));
+//    al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0,
+//                          map_offset_y + row * block_height + block_height / 2.0,
+//                          block_width/6.0,  al_map_rgb(234, 38, 38));
 }
 
 static void draw_power_bean(Map* M, const int row, const int col) {

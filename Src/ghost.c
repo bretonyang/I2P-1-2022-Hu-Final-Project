@@ -1,6 +1,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_primitives.h>
 #include "ghost.h"
+#include "game.h"
 #include "map.h"
 #include "pacman_obj.h"
 
@@ -12,10 +13,6 @@
 // Make the start position metadata stored with map.txt.
 const int cage_grid_x=22, cage_grid_y=11;
 
-/* shared variables. */
-extern uint32_t GAME_TICK;
-extern uint32_t GAME_TICK_CD;
-extern const int block_width,  block_height;
 /* Internal variables */
 static const int fix_draw_pixel_offset_x = -3;
 static const int fix_draw_pixel_offset_y = -3;

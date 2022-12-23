@@ -59,6 +59,12 @@ extern const int SCREEN_W;
 extern const int SCREEN_H;
 // At most 4 audios can be played at a time.
 extern const int RESERVE_SAMPLES;
+// game ticking counter
+extern uint32_t GAME_TICK;
+// # of times the game should update the scene's status, it's set to update 2*GAME_TICK_CD / 1sec.
+extern const uint32_t GAME_TICK_CD;
+// allegro timer for game tick
+extern ALLEGRO_TIMER* game_tick_timer;
 
 
 /* Input states */

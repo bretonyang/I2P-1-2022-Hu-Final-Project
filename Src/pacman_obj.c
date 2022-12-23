@@ -23,7 +23,8 @@ static const int basic_speed = 4; /// CHANGE THIS BACK to 2
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
 extern ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND;
 extern uint32_t GAME_TICK;
-extern uint32_t GAME_TICK_CD;
+extern const uint32_t GAME_TICK_CD;
+extern bool game_win;
 extern bool game_over;
 extern float effect_volume;
 
@@ -141,7 +142,7 @@ void pacman_draw(Pacman* pman) {
         /*
         	hint: instead of using pman->objData.moveCD, use Pacman's death_anim_counter to create animation
         */
-        // This will draw all images in 1.5 * PMAN_DEATH_ANIM_CD seconds
+        // This will draw all images in 1.5 * PMAN_DEATH_ANIM_CD ticks == 1.5 seconds
         // Get offset for 12 different images.
         // Following formula is equivalent to counter / ((3/2)*PMAN_DEATH_ANIM_CD / 12)
         offset = (al_get_timer_count(pman->death_anim_counter) * 12 * 2 / (PMAN_DEATH_ANIM_CD * 3)) * 16;
@@ -260,9 +261,14 @@ void pacman_NextMove(Pacman* pacman, Directions next) {
     pacman->objData.nextTryMove = next;
 }
 
-void pacman_die() {
+void pacman_die(void) {
     stop_bgm(PACMAN_MOVESOUND_ID);
     PACMAN_MOVESOUND_ID = play_audio(PACMAN_DEATH_SOUND, effect_volume);
+}
+
+void pacman_win(void) {
+    stop_bgm(PACMAN_MOVESOUND_ID);
+    /// TODO: Add pacman winning sound effect
 }
 
 

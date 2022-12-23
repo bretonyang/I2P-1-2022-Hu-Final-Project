@@ -8,13 +8,17 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
-extern uint32_t GAME_TICK, GAME_TICK_CD;
+extern uint32_t GAME_TICK;
+extern const uint32_t GAME_TICK_CD;
 const int GridSize = 22;
 float VOLUME = 1.0;
 extern map_offset_x;
 extern map_offset_y;
 extern block_width, block_height;
 
+/**
+ * Load the given file as an ALLEGRO_SAMPLE and return it.
+ */
 ALLEGRO_SAMPLE* load_audio(const char* filename) {
     ALLEGRO_SAMPLE* sample = al_load_sample(filename);
     if (!sample)
@@ -24,6 +28,10 @@ ALLEGRO_SAMPLE* load_audio(const char* filename) {
     return sample;
 }
 
+/**
+ * Play the given loaded music sample once.
+ * Returns the played sample id.
+ */
 ALLEGRO_SAMPLE_ID play_audio(ALLEGRO_SAMPLE* sample, float volume) {
     ALLEGRO_SAMPLE_ID id;
     if (!al_play_sample(sample, volume, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &id))
@@ -31,6 +39,10 @@ ALLEGRO_SAMPLE_ID play_audio(ALLEGRO_SAMPLE* sample, float volume) {
     return id;
 }
 
+/**
+ * Play the given loaded music sample in loop mode
+ * Returns the played sample id.
+ */
 ALLEGRO_SAMPLE_ID play_bgm(ALLEGRO_SAMPLE* sample, float volume) {
     ALLEGRO_SAMPLE_ID id;
     if (!al_play_sample(sample, volume, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, &id))
@@ -40,11 +52,17 @@ ALLEGRO_SAMPLE_ID play_bgm(ALLEGRO_SAMPLE* sample, float volume) {
     return id;
 }
 
+/**
+ * Stop playing the sample with the given sample id.
+ */
 void stop_bgm(ALLEGRO_SAMPLE_ID sample) {
     al_stop_sample(&sample);
     //game_log("stop audio (bgm)");
 }
 
+/**
+ * Returns the loaded font in the given file path and font size.
+ */
 ALLEGRO_FONT* load_font(const char* filename, int size) {
     ALLEGRO_FONT* font = al_load_font(filename, size, 0);
     if (!font)
@@ -87,6 +105,9 @@ ALLEGRO_BITMAP* load_bitmap_resized(const char* filename, int w, int h) {
 // TODO: Define bool pnt_in_rect(int px, int py, RecArea field)
 // Uncomment and fill in the code below.
 
+/**
+ * Returns true if the point (px, py) is in the area specified by a RecArea object, and false otherwise.
+ */
 bool pnt_in_rect(int px, int py, RecArea field) {
     return px >= field.x && px <= field.x + field.w && py >= field.y && py <= field.y + field.h;
 }
@@ -100,6 +121,9 @@ void setRecArea(RecArea* RA, float x, float y, float w, float h) {
 }
 
 // Hakathon
+/**
+ * Returns true if the 2 RecAreas overlap each other, and false otherwise.
+ */
 bool RecAreaOverlap(const RecArea RA,const RecArea RB) {
     // [TODO]
     // Detect if two RecArea is overlapped.

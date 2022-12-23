@@ -101,7 +101,7 @@ static void on_key_down(int keycode) {
 
     switch (keycode) {
     case ALLEGRO_KEY_ESCAPE:
-        // Close settings scene and switch to menu scene when "ESCAPE" pressed
+        // Close settings scene and switch to menu scene when "ESCAPE" is pressed
         game_change_scene(scene_menu_create());
         break;
     default:

@@ -30,14 +30,15 @@ typedef struct Pacman {
 /* Global variables */
 extern const int PMAN_DEATH_ANIM_CD; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
 
-Pacman* pacman_create();
-void pacman_destroy(Pacman* pman);
+extern Pacman* pacman_create();
+extern void pacman_destroy(Pacman* pman);
 
-void pacman_draw(Pacman* pacman);
-void pacman_move(Pacman* pacman, Map* M);
-void pacman_eatItem(Pacman* pacman, const char Item);
+extern void pacman_draw(Pacman* pacman);
+extern void pacman_move(Pacman* pacman, Map* M);
+extern void pacman_eatItem(Pacman* pacman, const char Item);
 
-void pacman_NextMove(Pacman* pacman, Directions next);
-void pacman_die();
+extern void pacman_NextMove(Pacman* pacman, Directions next);
+extern void pacman_die(void);
+extern void pacman_win(void);
 
 #endif // !PACMAN_OBJ_H

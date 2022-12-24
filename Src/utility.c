@@ -53,7 +53,7 @@ ALLEGRO_SAMPLE_ID play_bgm(ALLEGRO_SAMPLE* sample, float volume) {
 }
 
 /**
- * Stop playing the sample with the given sample id.
+ * Stop playing the bgm with the given sample id.
  */
 void stop_bgm(ALLEGRO_SAMPLE_ID sample) {
     al_stop_sample(&sample);

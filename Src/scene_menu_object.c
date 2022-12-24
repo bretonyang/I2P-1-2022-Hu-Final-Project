@@ -7,18 +7,19 @@
 #include <stdio.h>
 #include <string.h>
 
+
 Button button_create(float x, float y, float w, float h, const char* default_image_path, const char* hovered_image_path) {
 
     Button button;
     memset(&button, 0, sizeof(Button));
 
-    button.default_img = load_bitmap(default_image_path);
     if (hovered_image_path) {
         button.hovered_img = load_bitmap(hovered_image_path);
     }
 
+    button.default_img = load_bitmap(default_image_path);
     if (!button.default_img) {
-        game_log("failed loading button image!");
+        game_abort("failed loading button image!");
     }
 
     button.body.x = x;
@@ -29,7 +30,7 @@ Button button_create(float x, float y, float w, float h, const char* default_ima
     return button;
 }
 
-void drawButton(Button button) {
+void button_draw(Button button) {
     ALLEGRO_BITMAP* _img = button.hovered_img ?
                            (button.hovered ? button.hovered_img : button.default_img) :
                            button.default_img;
@@ -43,7 +44,18 @@ void drawButton(Button button) {
     );
 }
 
-bool buttonHover(Button button, int mouse_x, int mouse_y) {
+void button_destroy(Button button) {
+    // Destroy images if they were loaded
+    if (button.hovered_img)
+        al_destroy_bitmap(button.hovered_img);
+
+    al_destroy_bitmap(button.default_img);
+}
+
+/**
+ * Returns true if the button is hovered by the mouse, false otherwise.
+ */
+bool button_hovered(Button button, int mouse_x, int mouse_y) {
     //	[HACKATHON 3-6]
     //	TODO: Check if mouse is hovering on the button
     //	Uncomment and fill the code below

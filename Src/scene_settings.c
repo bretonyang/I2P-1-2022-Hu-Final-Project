@@ -15,14 +15,14 @@
 // name, they'll be different variables.
 
 /* Define your static vars / function prototypes below. */
-static ALLEGRO_BITMAP* settingsTitle = NULL;
+static ALLEGRO_BITMAP* settingsTitle;
 static ALLEGRO_SAMPLE_ID settingsBGM;
 static int settingsTitleW;
 static int settingsTitleH;
 static int settingsTextX;
 static int settingsTextY;
-static const float okImgW = 99; // width of the ok button image
-static const float okImgH = 63; // height of the ok button image
+static const int okImgW = 80; // width of the ok button image
+static const int okImgH = 61; // height of the ok button image
 
 static Button btnOK;
 
@@ -34,8 +34,8 @@ static void init(void) {
     settingsTextX = SCREEN_W >> 3;
     settingsTextY = SCREEN_H >> 2;
 
-    // Create back to menu button
-    btnOK = button_create((SCREEN_W - okImgW) / 2, SCREEN_H - 150, okImgW, okImgH, "Assets/ok_button.png", "Assets/ok_button2.png");
+    // Create the "OK" button
+    btnOK = button_create((SCREEN_W - okImgW) >> 1, SCREEN_H - 200, okImgW, okImgH, "Assets/ok_button.png", "Assets/ok_button2.png");
 
     // Load title image and get its width and height
     settingsTitle = load_bitmap("Assets/settings_title.png");
@@ -51,9 +51,7 @@ static void draw(void ) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     // Draw settings title
-    const float title_x = (SCREEN_W - settingsTitleW) >> 1;
-    const float title_y = settingsTitleH >> 1;
-    al_draw_bitmap(settingsTitle, title_x, title_y, 0);
+    al_draw_bitmap(settingsTitle, (SCREEN_W - settingsTitleW) >> 1, 60, 0);
 
     // Draw music volume title text
     al_draw_text(
@@ -76,22 +74,26 @@ static void draw(void ) {
     );
 
     // Draw confirmation button
-    drawButton(btnOK);
+    button_draw(btnOK);
 }
 
-static void destroy() {
+static void destroy(void) {
+    // Audio
     stop_bgm(settingsBGM);
+
+    // Bitmaps
     al_destroy_bitmap(settingsTitle);
-    al_destroy_bitmap(btnOK.default_img);
-    al_destroy_bitmap(btnOK.hovered_img);
+
+    // Buttons
+    button_destroy(btnOK);
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
     // Update button hover state
-    btnOK.hovered = buttonHover(btnOK, mouse_x, mouse_y);
+    btnOK.hovered = button_hovered(btnOK, mouse_x, mouse_y);
 }
 
-static void on_mouse_down() {
+static void on_mouse_down(void) {
     // change to menu scene when ok button clicked
     if (btnOK.hovered)
         game_change_scene(scene_menu_create()); // mouse down + hovered = clicked

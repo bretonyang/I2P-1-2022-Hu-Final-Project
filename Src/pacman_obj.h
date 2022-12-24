@@ -33,7 +33,7 @@ typedef struct Pacman {
 extern const int PMAN_DEATH_ANIM_CD; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
 extern const int PMAN_WIN_ANIM_CD;
 
-extern Pacman* pacman_create();
+extern Pacman* pacman_create(void);
 extern void pacman_destroy(Pacman* pman);
 
 extern void pacman_draw(Pacman* pacman);

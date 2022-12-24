@@ -4,4 +4,4 @@
 
 Scene scene_menu_create(void);
 
-#endif
+#endif // SCENE_MENU_H

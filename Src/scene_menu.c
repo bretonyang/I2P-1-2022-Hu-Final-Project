@@ -47,7 +47,6 @@ static void init() {
 
 }
 
-
 static void draw() {
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
@@ -66,11 +65,11 @@ static void draw() {
         0
     );
 
-    // draw game entering prompt
+    // draw game entering prompt text
     al_draw_text(
         menuFont,
         al_map_rgb(255, 255, 255),
-        SCREEN_W/2,
+        SCREEN_W >> 1,
         SCREEN_H - 150,
         ALLEGRO_ALIGN_CENTER,
         "PRESS \"ENTER\""
@@ -79,7 +78,7 @@ static void draw() {
     // [HACKATHON 3-3]
     // TODO: Draw button
     // Uncomment and fill the code below
-    drawButton(btnSettings);
+    button_draw(btnSettings);
 }
 
 static void destroy() {
@@ -88,15 +87,16 @@ static void destroy() {
     //	[HACKATHON 3-10]
     //	TODO: Destroy button images
     //	Uncomment and fill the code below
-    al_destroy_bitmap(btnSettings.default_img);
-    al_destroy_bitmap(btnSettings.hovered_img);
+//    al_destroy_bitmap(btnSettings.default_img);
+//    al_destroy_bitmap(btnSettings.hovered_img);
+    button_destroy(btnSettings);
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
     //	[HACKATHON 3-7]
     //	TODO: Update button's status(hovered), and utilize the function `pnt_in_rect`, which you just implemented
     //	Uncomment and fill the code below
-    btnSettings.hovered = buttonHover(btnSettings, mouse_x, mouse_y);
+    btnSettings.hovered = button_hovered(btnSettings, mouse_x, mouse_y);
 }
 
 

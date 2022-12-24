@@ -4,4 +4,4 @@
 
 Scene scene_settings_create(void);
 
-#endif
+#endif // SCENE_SETTINGS_H

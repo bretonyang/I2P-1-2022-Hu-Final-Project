@@ -12,8 +12,9 @@ typedef struct Button {
     bool hovered;
 } Button;
 
-Button button_create(float, float, float, float, const char*, const char*);
-void drawButton(Button button);
-bool buttonHover(Button, int, int);
+extern Button button_create(float, float, float, float, const char*, const char*);
+extern void button_draw(Button);
+extern void button_destroy(Button);
+extern bool button_hovered(Button, int, int);
 
-#endif
+#endif // MENU_OBJECT_H

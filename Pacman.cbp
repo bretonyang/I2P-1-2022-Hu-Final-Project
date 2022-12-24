@@ -70,6 +70,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Src/ghost.h" />
+		<Unit filename="Src/ghost_blue_move_script.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/ghost_pink_move_script.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="Src/ghost_red_move_script.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -100,6 +106,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Src/scene_settings.h" />
+		<Unit filename="Src/scene_win.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_win.h" />
 		<Unit filename="Src/shared.c">
 			<Option compilerVar="CC" />
 		</Unit>

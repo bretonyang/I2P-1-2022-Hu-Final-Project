@@ -7,7 +7,7 @@ const int PMAN_DEATH_ANIM_CD = 64; // Pacman's death animation will be finished 
 const int PMAN_WIN_ANIM_CD = 64; // Pacman's winning animation counter CD
 
 /* Static variables */
-static const int start_grid_x = 25, start_grid_y = 25;		// where to put pacman at the beginning
+static const int start_grid_x = 24, start_grid_y = 24;		// where to put pacman at the beginning
 static const int fix_draw_pixel_offset_x = -3, fix_draw_pixel_offset_y = -3;  // draw offset
 static const int draw_region = 30;							// pacman bitmap draw region
 static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
@@ -69,7 +69,7 @@ static bool pacman_movable(Pacman* pacman, Map* M, Directions targetDirec) {
     return true;
 }
 
-Pacman* pacman_create() {
+Pacman* pacman_create(void) {
 
     /*
     	[TODO]
@@ -83,8 +83,8 @@ Pacman* pacman_create() {
     /* set starting point, Size, */
     /* TODO? */
     /* hint / just put it */
-    pman->objData.Coord.x = 24;
-    pman->objData.Coord.y = 24;
+    pman->objData.Coord.x = start_grid_x;
+    pman->objData.Coord.y = start_grid_y;
     pman->objData.Size.x = block_width;
     pman->objData.Size.y = block_height;
 
@@ -107,8 +107,8 @@ Pacman* pacman_create() {
     pman->move_sprite = load_bitmap("Assets/pacman_move.png");
     pman->die_sprite = load_bitmap("Assets/pacman_die.png");
     pman->win_sprite = load_bitmap("Assets/pacman_win.png");
-    return pman;
 
+    return pman;
 }
 
 void pacman_destroy(Pacman* pman) {
@@ -120,11 +120,15 @@ void pacman_destroy(Pacman* pman) {
     	...
     	free(pman);
     */
+    // Bitmaps
     al_destroy_bitmap(pman->move_sprite);
     al_destroy_bitmap(pman->die_sprite);
     al_destroy_bitmap(pman->win_sprite);
+
+    // Timers
     al_destroy_timer(pman->death_anim_counter);
     al_destroy_timer(pman->win_anim_counter);
+
     free(pman);
 }
 
@@ -150,7 +154,7 @@ void pacman_draw(Pacman* pman) {
 //		draw_region, draw_region, 0
 //	);
 
-    int offset = 0;
+    int offset = 0; // x position of the pman bitmap in sprite sheet
     if (game_over) {
         /*
         	hint: instead of using pman->objData.moveCD, use Pacman's death_anim_counter to create animation
@@ -167,18 +171,17 @@ void pacman_draw(Pacman* pman) {
                               draw_region, draw_region, 0
                              );
     }
-    // draw the win_sprite after PMAN_WIN_ANIM_CD / 2 win_timer ticks
     else if (game_win && al_get_timer_count(pman->win_anim_counter) >= PMAN_WIN_ANIM_CD >> 1) {
-        // draw winning animation
+        // draw the win_sprite after PMAN_WIN_ANIM_CD / 2 win_timer ticks
         al_draw_scaled_bitmap(pman->win_sprite, offset, 0,
-                          16, 16,
-                          drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-                          draw_region, draw_region, 0
-                         );
+                              16, 16,
+                              drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                              draw_region, draw_region, 0
+                             );
 
     }
     else {
-        // get the bitmap offset by deciding which side pman's facing
+        // calculate the bitmap offset by pman's facing direction
         // NOTE: each bitmap is 16px wide.
         switch(pman->objData.facing) {
         case RIGHT:
@@ -198,7 +201,7 @@ void pacman_draw(Pacman* pman) {
         }
 
         /*
-            IDEA of animation (just as a reference in caes I forgot this):
+            IDEA of animation (just as a reference in case I forgot this):
 
                 Basically, the moveCD will drop as the GAME_TICK ticks, and the sprite will move
             twice per GAME_TICK_CD (this is due to the object's speed is 2, if it's 3 then the object
@@ -208,7 +211,7 @@ void pacman_draw(Pacman* pman) {
                 We then draw 2 different sprite motions from the sprite sheet.
         */
 
-        // draw 2 different motion images per GAME_TICK_CD
+        // draw 2 different bitmaps per GAME_TICK_CD to create animation
         switch (pman->objData.moveCD * 2 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 2)
         case 1:
             al_draw_scaled_bitmap(pman->move_sprite, offset, 0,
@@ -297,7 +300,6 @@ void pacman_die(void) {
 
 void pacman_win(void) {
     stop_bgm(PACMAN_MOVESOUND_ID);
-    /// TODO: Add pacman winning sound effect
 }
 
 

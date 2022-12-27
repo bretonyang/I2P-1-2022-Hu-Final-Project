@@ -27,7 +27,7 @@ static int gameTitleH;
 //	[HACKATHON 3-1]
 //	TODO: Declare variable for button
 //	Uncomment and fill the code below
-static Button btnSettings;
+static Button* btnSettings;
 
 static void init() {
 
@@ -96,7 +96,8 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
     //	[HACKATHON 3-7]
     //	TODO: Update button's status(hovered), and utilize the function `pnt_in_rect`, which you just implemented
     //	Uncomment and fill the code below
-    btnSettings.hovered = button_hovered(btnSettings, mouse_x, mouse_y);
+//    btnSettings->hovered = button_hovered(btnSettings, mouse_x, mouse_y);
+    button_update_hover_state(btnSettings, mouse_x, mouse_y);
 }
 
 
@@ -111,7 +112,7 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 // 	      `Enter the setting scene`
 //	Uncomment and fill the code below
 static void on_mouse_down() {
-    if (btnSettings.hovered)
+    if (btnSettings->hovered)
         game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
 }
 

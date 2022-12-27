@@ -254,7 +254,7 @@ static void draw_block_index(Map* M, const int row, const int col) {
         e_y = s_y + dw;
 
         al_draw_filled_rectangle(s_x, s_y,
-                                 e_x, e_y, al_map_rgb(25, 25, 166));
+                                 e_x, e_y, al_map_rgb(12, 166, 120));
 //        al_draw_filled_rectangle(s_x, s_y,
 //                                 e_x, e_y, al_map_rgb(25, 154, 25));
 
@@ -264,7 +264,7 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = s_x + dw;
             e_y = block_y + block_height;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 25, 166));
+                                     e_x, e_y, al_map_rgb(12, 166, 120));
 //            al_draw_filled_rectangle(s_x, s_y,
 //                                     e_x, e_y, al_map_rgb(25, 154, 25));
         }
@@ -274,7 +274,7 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = s_x + dw;
             e_y = block_y;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 25, 166));
+                                     e_x, e_y, al_map_rgb(12, 166, 120));
 //            al_draw_filled_rectangle(s_x, s_y,
 //                                     e_x, e_y, al_map_rgb(25, 154, 25));
         }
@@ -284,10 +284,9 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = block_x + block_width;
             e_y = s_y + dw;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 25, 166));
+                                     e_x, e_y, al_map_rgb(12, 166, 120));
 //            al_draw_filled_rectangle(s_x, s_y,
 //                                     e_x, e_y, al_map_rgb(25, 154, 25));
-
         }
         if (col > 0 && L && !(UL && BL && U && B)) {
             s_x = block_x;
@@ -295,7 +294,7 @@ static void draw_block_index(Map* M, const int row, const int col) {
             e_x = s_x + (dw << 1);
             e_y = s_y + dw;
             al_draw_filled_rectangle(s_x, s_y,
-                                     e_x, e_y, al_map_rgb(25, 25, 166));
+                                     e_x, e_y, al_map_rgb(12, 166, 120));
 //             al_draw_filled_rectangle(s_x, s_y,
 //                                      e_x, e_y, al_map_rgb(25, 154, 25));
         }

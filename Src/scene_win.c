@@ -24,8 +24,8 @@ static const int btnImgW = 177; // width of button images
 static const int btnImgH = 54; // height of button images
 
 // Buttons
-static Button btnRestart; // button to switch to main game scene
-static Button btnMenu; // button to switch to menu scene
+static Button* btnRestart; // button to switch to main game scene
+static Button* btnMenu; // button to switch to menu scene
 
 
 /* Internal functions */
@@ -78,14 +78,15 @@ static void destroy(void) {
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
-    btnRestart.hovered = button_hovered(btnRestart, mouse_x, mouse_y);
-    btnMenu.hovered = button_hovered(btnMenu, mouse_x, mouse_y);
+    button_update_hover_state(btnRestart, mouse_x, mouse_y);
+    button_update_hover_state(btnMenu, mouse_x, mouse_y);
 }
 
 static void on_mouse_down(void) {
-    if (btnRestart.hovered)
+    if (btnRestart->hovered)
         game_change_scene(scene_main_create());
-    if (btnMenu.hovered)
+
+    if (btnMenu->hovered)
         game_change_scene(scene_menu_create());
 }
 
@@ -97,6 +98,8 @@ Scene scene_win_create(void) {
     Scene scene;
     memset(&scene, 0, sizeof(Scene));
 
+    scene.name = "Victory scene";
+
     // Register callbacks
     scene.initialize = &init;
     scene.draw = &draw;
@@ -104,6 +107,6 @@ Scene scene_win_create(void) {
     scene.on_mouse_move = &on_mouse_move;
     scene.on_mouse_down = &on_mouse_down;
 
-    game_log("Win scene created");
+    game_log("Victory scene created");
     return scene;
 }

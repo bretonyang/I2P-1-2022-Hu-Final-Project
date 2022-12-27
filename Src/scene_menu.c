@@ -112,8 +112,9 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 // 	      `Enter the setting scene`
 //	Uncomment and fill the code below
 static void on_mouse_down() {
-    if (btnSettings->hovered)
+    if (btnSettings->hovered) {
         game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
+    }
 }
 
 static void on_key_down(int keycode) {

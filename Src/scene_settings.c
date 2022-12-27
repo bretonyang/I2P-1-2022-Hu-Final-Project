@@ -161,16 +161,18 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 
 static void on_mouse_down(void) {
     // change to menu scene when ok button clicked
-    if (btnOK->hovered)
+    if (btnOK->hovered) {
         game_change_scene(scene_menu_create());
+    }
+    else {
+        // If handle is hovered, then update the handle state to "held"
+        if (musicSlider->handle_hovered)
+            musicSlider->handle_held = true;
 
-    // If handle is hovered, then update the handle state to "held"
-    if (musicSlider->handle_hovered)
-        musicSlider->handle_held = true;
 
-
-    if (soundSlider->handle_hovered)
-        soundSlider->handle_held = true;
+        if (soundSlider->handle_hovered)
+            soundSlider->handle_held = true;
+    }
 }
 
 static void on_mouse_up(int a, int mouse_x, int mouse_y, int f) {
@@ -178,7 +180,7 @@ static void on_mouse_up(int a, int mouse_x, int mouse_y, int f) {
     if (musicSlider->handle_held)
         musicSlider->handle_held = false;
 
-    if (soundSlider->handle_held)
+    else if (soundSlider->handle_held)
         soundSlider->handle_held = false;
 }
 

@@ -33,8 +33,7 @@ static Button* btnMenu; // button to switch to menu scene
 static void init(void) {
     // Create buttons
     btnRestart = button_create((SCREEN_W >> 1) - btnImgW - 50, 550, btnImgW, btnImgH,
-                               "Assets/restart.png", "Assets/restart2.png"
-                              );
+                               "Assets/restart.png", "Assets/restart2.png");
     btnMenu = button_create((SCREEN_W >> 1) + 50, 550, btnImgW, btnImgH, "Assets/menu.png", "Assets/menu2.png");
 
     // Load title image
@@ -83,11 +82,12 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 }
 
 static void on_mouse_down(void) {
-    if (btnRestart->hovered)
+    if (btnRestart->hovered) {
         game_change_scene(scene_main_create());
-
-    if (btnMenu->hovered)
+    }
+    else if (btnMenu->hovered) {
         game_change_scene(scene_menu_create());
+    }
 }
 
 

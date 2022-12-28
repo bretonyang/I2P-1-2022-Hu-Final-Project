@@ -6,7 +6,8 @@
 
 /* Button utility functions */
 
-Button* button_create(float x, float y, float w, float h, const char* default_image_path, const char* hovered_image_path) {
+Button* button_create(float x, float y, float w, float h,
+                      const char* default_image_path, const char* hovered_image_path) {
 
     Button* button = (Button*)malloc(sizeof(Button));
     memset(button, 0, sizeof(Button));
@@ -136,19 +137,25 @@ void slider_update_hover_state(Slider* slider, int mouse_x, int mouse_y) {
 }
 
 void slider_update_value(Slider* slider, int mouse_x, float* value) {
-    // update handle x position
-    float newPosition = mouse_x - (slider->handle_body.w / 2);
-
-    // make sure mouse_x is in slider track range
-    if (newPosition >= slider->track_body.x - slider->handle_body.w / 2 &&
-        newPosition <= slider->track_body.x + slider->track_body.w - slider->handle_body.w / 2) {
+    // mouse_x is in slider track range
+    if (mouse_x >= slider->track_body.x &&
+            mouse_x <= slider->track_body.x + slider->track_body.w) {
         // record handle new position
-        slider->handle_body.x = newPosition;
+        slider->handle_body.x = mouse_x - (slider->handle_body.w / 2);
 
         // record slider value
         *value = ((float)mouse_x - slider->track_body.x) / slider->track_body.w;
     }
-
+    // mouse_x is larger than track's end
+    else if (mouse_x > slider->track_body.x + slider->track_body.w) {
+        slider->handle_body.x = slider->track_body.x + slider->track_body.w - (slider->handle_body.w / 2);
+        *value = 1.0;
+    }
+    // mouse_x is smaller than track's head
+    else if (mouse_x < slider->track_body.x) {
+        slider->handle_body.x = slider->track_body.x - (slider->handle_body.w / 2);
+        *value = 0.0;
+    }
 }
 
 

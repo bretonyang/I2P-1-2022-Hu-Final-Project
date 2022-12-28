@@ -14,7 +14,10 @@
 // known as "internal linkage"). If other files has the same variable
 // name, they'll be different variables.
 
-/* Define your static vars / function prototypes below. */
+/// TODO: implement a reset to default button
+
+/* Internal variables */
+
 static ALLEGRO_BITMAP* settingsTitle;
 static ALLEGRO_SAMPLE_ID settingsBGM;
 

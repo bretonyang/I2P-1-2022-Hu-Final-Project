@@ -16,6 +16,7 @@
 extern ALLEGRO_FONT* font_pirulen_32;
 extern ALLEGRO_FONT* font_pirulen_24;
 extern ALLEGRO_FONT* menuFont;
+extern ALLEGRO_FONT* titleFont;
 
 // audio
 extern ALLEGRO_SAMPLE* themeMusic;
@@ -25,6 +26,7 @@ extern ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND;
 extern ALLEGRO_SAMPLE* PACMAN_WIN_SOUND;
 
 extern int fontSize;
+extern int titleFontSize;
 extern float music_volume;
 extern float effect_volume;
 extern bool gameDone;

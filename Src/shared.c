@@ -12,6 +12,7 @@
 ALLEGRO_FONT* font_pirulen_32;
 ALLEGRO_FONT* font_pirulen_24;
 ALLEGRO_FONT* menuFont = NULL;
+ALLEGRO_FONT* titleFont = NULL;
 
 // Audio
 ALLEGRO_SAMPLE* themeMusic = NULL;
@@ -21,6 +22,7 @@ ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND = NULL;
 ALLEGRO_SAMPLE* PACMAN_WIN_SOUND = NULL;
 
 int fontSize = 30;
+int titleFontSize = 48;
 float music_volume = 0.5;
 float effect_volume = 0.5;
 bool gameDone = false;
@@ -36,6 +38,7 @@ ScoreData* scores; // array of high scores
 void shared_init(void) {
 
     menuFont = load_font("Assets/Minecraft.ttf", fontSize);
+    titleFont = load_font("Assets/Minecraft.ttf", titleFontSize);
     themeMusic = load_audio("Assets/Music/original_theme.ogg");
     gameMusic_v1 = load_audio("Assets/Music/ghost_siren_v1.ogg");
     PACMAN_MOVESOUND = load_audio("Assets/Music/pacman-chomp.ogg");
@@ -48,6 +51,7 @@ void shared_init(void) {
 void shared_destroy(void) {
 
     al_destroy_font(menuFont);
+    al_destroy_font(titleFont);
     al_destroy_sample(themeMusic);
     al_destroy_sample(gameMusic_v1);
     al_destroy_sample(PACMAN_MOVESOUND);

@@ -29,6 +29,9 @@ static Button* btnRestart; // button to switch to main game scene
 static Button* btnMenu; // button to switch to menu scene
 
 
+/* Global variables */
+extern int game_main_score;
+
 /* Internal functions */
 
 static void init(void) {
@@ -56,8 +59,13 @@ static void init(void) {
 static void draw(void) {
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
-    // Draw win title and trophy
-    al_draw_bitmap(winTitle, (SCREEN_W - winTitleW) >> 1, SCREEN_H >> 2, 0);
+    // Draw win title, score, and trophy
+    al_draw_bitmap(winTitle, (SCREEN_W - winTitleW) >> 1, 100, 0);
+    al_draw_textf(
+        titleFont, al_map_rgb(255, 255, 255),
+        SCREEN_W >> 1, 250,
+        ALLEGRO_ALIGN_CENTER, "Final Score: %d", game_main_score
+    );
     al_draw_bitmap(trophyImg, (SCREEN_W - trophyImgW) >> 1, (SCREEN_H - trophyImgH) >> 1, 0);
 
     // Draw buttons

@@ -178,7 +178,6 @@ void pacman_draw(Pacman* pman) {
                               drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
                               draw_region, draw_region, 0
                              );
-
     }
     else {
         // calculate the bitmap offset by pman's facing direction

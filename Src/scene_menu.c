@@ -28,14 +28,22 @@ static int gameTitleH;
 //	[HACKATHON 3-1]
 //	TODO: Declare variable for button
 //	Uncomment and fill the code below
-static Button* btnSettings;
+
+// UI Components
+static DropdownMenu* dropdownMenu;
 
 static void init() {
 
     // [HACKATHON 3-2]
     // TODO: Create button to settings
     //	Uncomment and fill the code below
-    btnSettings = button_create(730, 20, 50, 50, "Assets/scene_menu/settings.png", "Assets/scene_menu/settings2.png");
+//    btnSettings = button_create(730, 20, 50, 50, "Assets/scene_menu/settings.png", "Assets/scene_menu/settings2.png");
+
+    dropdownMenu = dropdownMenu_create(730, 20, 50, 50,
+                                       670, 110, 51,
+                                       "Assets/scene_menu/dropdown.png", "Assets/scene_menu/dropdown2.png",
+                                       "Assets/scene_menu/settings.png", "Assets/scene_menu/settings2.png",
+                                       "Assets/scene_menu/scores.png", "Assets/scene_menu/scores2.png");
 
     // Load menu title image and get its width and height
     gameTitle = load_bitmap("Assets/scene_menu/menu_title.png");
@@ -79,7 +87,8 @@ static void draw() {
     // [HACKATHON 3-3]
     // TODO: Draw button
     // Uncomment and fill the code below
-    button_draw(btnSettings);
+//    button_draw(btnSettings);
+    dropdownMenu_draw(dropdownMenu);
 }
 
 static void destroy() {
@@ -90,15 +99,16 @@ static void destroy() {
     //	Uncomment and fill the code below
 //    al_destroy_bitmap(btnSettings.default_img);
 //    al_destroy_bitmap(btnSettings.hovered_img);
-    button_destroy(btnSettings);
+//    button_destroy(btnSettings);
+    dropdownMenu_destroy(dropdownMenu);
 }
 
 static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
     //	[HACKATHON 3-7]
     //	TODO: Update button's status(hovered), and utilize the function `pnt_in_rect`, which you just implemented
     //	Uncomment and fill the code below
-//    btnSettings->hovered = button_hovered(btnSettings, mouse_x, mouse_y);
-    button_update_hover_state(btnSettings, mouse_x, mouse_y);
+//    button_update_hover_state(btnSettings, mouse_x, mouse_y);
+    dropdownMenu_update_hover_state(dropdownMenu, mouse_x, mouse_y);
 }
 
 
@@ -113,8 +123,29 @@ static void on_mouse_move(int a, int mouse_x, int mouse_y, int f) {
 // 	      `Enter the setting scene`
 //	Uncomment and fill the code below
 static void on_mouse_down() {
-    if (btnSettings->hovered) {
-        game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
+//    if (btnSettings->hovered) {
+//        game_change_scene(scene_settings_create()); // mouse down + hovered = clicked
+//    }
+
+    if (dropdownMenu->isOpened) {
+        if (dropdownMenu->dropdownBtn->hovered) {
+            // Close dropdown
+            dropdownMenu->isOpened = false;
+        }
+        else if (dropdownMenu->settingsBtn->hovered) {
+            // Switch to settings scene
+            game_change_scene(scene_settings_create());
+        }
+        else if (dropdownMenu->highScoreBtn->hovered) {
+            // Switch to high scores scene
+            game_change_scene(scene_scores_create());
+        }
+    }
+    else {
+        if (dropdownMenu->dropdownBtn->hovered) {
+            // Open dropdown
+            dropdownMenu->isOpened = true;
+        }
     }
 }
 
@@ -125,10 +156,10 @@ static void on_key_down(int keycode) {
         // Change to game scene when "ENTER" pressed
         game_change_scene(scene_main_create());
         break;
-    case ALLEGRO_KEY_ESCAPE:
-        // Change to settings scene when "ESCAPE" pressed
-        game_change_scene(scene_scores_create());
-        break;
+//    case ALLEGRO_KEY_ESCAPE:
+//        // Change to settings scene when "ESCAPE" pressed
+//        game_change_scene(scene_scores_create());
+//        break;
     default:
         break;
     }

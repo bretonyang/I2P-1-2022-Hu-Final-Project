@@ -4,7 +4,10 @@
 #include "utility.h"
 
 
+
+/* ************************ */
 /* Button Utility Functions */
+/* ************************ */
 
 Button* button_create(float x, float y, float w, float h,
                       const char* default_image_path, const char* hovered_image_path) {
@@ -75,7 +78,10 @@ void button_update_hover_state(Button* button, int mouse_x, int mouse_y) {
 }
 
 
+
+/* ************************ */
 /* Slider Utility Functions */
+/* ************************ */
 
 Slider* slider_create(float track_x, float track_y, float track_w, float track_h,
                       float handle_x, float handle_y, float handle_w, float handle_h,
@@ -156,5 +162,62 @@ void slider_update_value(Slider* slider, int mouse_x, float* value) {
 }
 
 
+
+/* ******************************* */
 /* Dropdown Menu Utility Functions */
+/* ******************************* */
+
+// Definitely want to define other structs to simplify this huge parameter dump
+// Maybe consider using an array for item buttons, to avoid hard coding,
+// and use function ptrs to assign scene creating functions to each btn.
+DropdownMenu* dropdownMenu_create(float dropdown_x, float dropdown_y, float dropdown_w, float dropdown_h,
+                                  float item_x, float item_w, float item_h,
+                                  const char* dropdown_img, const char* dropdown_img_hov,
+                                  const char* settings_img, const char* settings_img_hov,
+                                  const char* scores_img, const char* scores_img_hov) {
+
+    // Allocate dropdownMenu object
+    DropdownMenu* dropdownMenu = (DropdownMenu*)malloc(sizeof(DropdownMenu));
+    memset(dropdownMenu, 0, sizeof(DropdownMenu));
+
+    // Create dropdown button object
+    dropdownMenu->dropdownBtn = button_create(dropdown_x, dropdown_y, dropdown_w, dropdown_h,
+                                              dropdown_img, dropdown_img_hov);
+    // Create item buttons
+    dropdownMenu->settingsBtn = button_create(item_x, dropdown_y + dropdown_h, item_w, item_h,
+                                              settings_img, settings_img_hov);
+    dropdownMenu->highScoreBtn = button_create(item_x, dropdown_y + dropdown_h + item_h, item_w, item_h,
+                                              scores_img, scores_img_hov);
+
+    dropdownMenu->isOpened = false;
+
+    return dropdownMenu;
+}
+
+void dropdownMenu_draw(DropdownMenu* dropdownMenu) {
+    button_draw(dropdownMenu->dropdownBtn);
+
+    if (dropdownMenu->isOpened) {
+        button_draw(dropdownMenu->settingsBtn);
+        button_draw(dropdownMenu->highScoreBtn);
+    }
+}
+
+void dropdownMenu_update_hover_state(DropdownMenu* dropdownMenu, int mouse_x, int mouse_y) {
+    if (dropdownMenu->isOpened) {
+        button_update_hover_state(dropdownMenu->dropdownBtn, mouse_x, mouse_y);
+        button_update_hover_state(dropdownMenu->settingsBtn, mouse_x, mouse_y);
+        button_update_hover_state(dropdownMenu->highScoreBtn, mouse_x, mouse_y);
+    }
+    else {
+        button_update_hover_state(dropdownMenu->dropdownBtn, mouse_x, mouse_y);
+    }
+}
+
+void dropdownMenu_destroy(DropdownMenu* dm) {
+    button_destroy(dm->dropdownBtn);
+    button_destroy(dm->settingsBtn);
+    button_destroy(dm->highScoreBtn);
+    free(dm);
+}
 

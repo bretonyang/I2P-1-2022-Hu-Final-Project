@@ -21,8 +21,8 @@ static const int btnImgW = 177; // width of button image
 static const int btnImgH = 54; // height of button image
 
 // table's text dimensions settings
-static const int rankTextX = 100;
-static const int scoreTextX = 350;
+static const int rankTextX = 130;
+static const int scoreTextX = 330;
 static const int dateTextX = 600;
 static const int tableStartY = 180;
 static const int tableDiffY = 80;

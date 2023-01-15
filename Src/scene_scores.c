@@ -15,10 +15,8 @@ static ALLEGRO_BITMAP* scoresTitle;
 static ALLEGRO_SAMPLE_ID scoresBGM;
 
 // width and height settings
-static int scoresTitleW;
-static int scoresTitleH;
-static const int btnImgW = 177; // width of button image
-static const int btnImgH = 54; // height of button image
+static int scoresTitleW, scoresTitleH;
+static const int btnImgW = 177, btnImgH = 54; // width and height of button image
 
 // table's text dimensions settings
 static const int rankTextX = 130;

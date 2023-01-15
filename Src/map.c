@@ -6,6 +6,9 @@
 #include "map.h"
 #define QUEUE_SIZE 3000
 
+/* Internal variables */
+static ALLEGRO_BITMAP* speedFruit;
+
 /*global variables*/
 // [ NOTE ]
 const int block_width = 21,  block_height = 21;			// the pixel size of a "block"
@@ -16,6 +19,7 @@ const int four_probe[4][2] = {{ 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }};
 static void draw_block_index(Map* M, int row, int col);
 static void draw_bean(Map* M, const int row, const int col);
 static void draw_power_bean(Map* M, const int row, const int col);
+static void draw_speed_fruit(Map* M, const int row, const int col);
 
 const char* nthu_map[] = {
     "#####################################",
@@ -180,6 +184,9 @@ Map* create_map(const char * filepath) {
 
     M->beansNum = M->beansCount;
 
+    // Load the speed fruit bitmap
+    speedFruit = load_bitmap("Assets/speed_fruit.png");
+
     if (filepath != NULL)
         fclose(pFile);
 
@@ -198,6 +205,9 @@ void delete_map(Map* M) {
         free(M->map); // free 2d array for map
     }
     free(M); // free Map object
+
+    // Delete bitmap
+    al_destroy_bitmap(speedFruit);
 }
 
 
@@ -218,13 +228,14 @@ void draw_map(Map const* M) {
                 break;
             // [ TODO ]
             // draw the power bean
-            /*
             case 'P':
             	draw_power_bean(M, row, col);
             	break;
-            */
             case '.':
                 draw_bean(M, row, col);
+                break;
+            case 'S':
+                draw_speed_fruit(M, row, col);
                 break;
             default:
                 break;
@@ -314,6 +325,13 @@ static void draw_power_bean(Map* M, const int row, const int col) {
     al_draw_filled_circle(map_offset_x + col * block_width + block_width / 2.0,
                           map_offset_y + row * block_height + block_height / 2.0,
                           block_width / 3.0, al_map_rgb(234, 178, 38));
+}
+
+static void draw_speed_fruit(Map* M, const int row, const int col) {
+    al_draw_scaled_bitmap(speedFruit, 0, 0, 16, 16,
+                          map_offset_x + col * block_width,
+                          map_offset_y + row * block_height,
+                          block_width, block_height, 0);
 }
 
 

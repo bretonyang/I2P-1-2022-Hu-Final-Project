@@ -5,6 +5,7 @@
 /* Global variables */
 const int PMAN_DEATH_ANIM_CD = 64; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
 const int PMAN_WIN_ANIM_CD = 64; // Pacman's winning animation counter CD
+const int PMAN_SPEED_UP_CD = 64; // Pacman's speed up effect timer count down
 
 /* Static variables */
 static const int start_grid_x = 24, start_grid_y = 24;		// where to put pacman at the beginning
@@ -18,10 +19,11 @@ static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
 // totally understand the meaning of speed and function
 // `step()` in `scene_game.c`, also the relationship between
 // `speed`, `GAME_TICK`, `GAME_TICK_CD`, `objData->moveCD`.
-static const int basic_speed = 4; /// CHANGE THIS BACK to 2
+static const int basic_speed = 2;
 
 /* Shared variables */
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
+extern ALLEGRO_SAMPLE* PACMAN_EAT_FRUIT_SOUND;
 extern ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND;
 extern uint32_t GAME_TICK;
 extern const uint32_t GAME_TICK_CD;
@@ -100,7 +102,12 @@ Pacman* pacman_create(void) {
     if (pman->win_anim_counter == NULL) {
         game_abort("failed to create pman->win_anim_counter");
     }
+    pman->speed_up_counter = al_create_timer(1.0f / PMAN_SPEED_UP_CD);
+    if (!pman->speed_up_counter) {
+        game_abort("failed to create pman->speed_up_counter");
+    }
 
+    pman->speedUp = false;
     pman->powerUp = false;
 
     /* load sprites */
@@ -128,10 +135,19 @@ void pacman_destroy(Pacman* pman) {
     // Timers
     al_destroy_timer(pman->death_anim_counter);
     al_destroy_timer(pman->win_anim_counter);
+    al_destroy_timer(pman->speed_up_counter);
 
     free(pman);
 }
 
+void pacman_update_status(Pacman* pacman) {
+    if (pacman->speedUp && al_get_timer_count(pacman->speed_up_counter) >= 5 * PMAN_SPEED_UP_CD) {
+        al_stop_timer(pacman->speed_up_counter);
+        pacman->speed = basic_speed;
+        pacman->speedUp = false;
+//        game_log("speedUp: %d, timer: %d, speed: %d", pacman->speedUp, al_get_timer_count(pacman->speed_up_counter), pacman->speed);
+    }
+}
 
 void pacman_draw(Pacman* pman) {
     /*
@@ -283,6 +299,15 @@ void pacman_eatItem(Pacman* pacman, const char Item) {
         stop_bgm(PACMAN_MOVESOUND_ID);
         PACMAN_MOVESOUND_ID = play_audio(PACMAN_MOVESOUND, effect_volume);
         break;
+    case 'S':
+        stop_bgm(PACMAN_MOVESOUND_ID);
+        PACMAN_MOVESOUND_ID = play_audio(PACMAN_EAT_FRUIT_SOUND, effect_volume);
+        pacman->speedUp = true;
+        al_set_timer_count(pacman->speed_up_counter, 0);
+        al_start_timer(pacman->speed_up_counter);
+        pacman->speed = 2 * basic_speed;
+//        game_log("speedUp: %d, timer: %d, speed: %d", pacman->speedUp, al_get_timer_count(pacman->speed_up_counter), pacman->speed);
+        break;
     default:
         break;
     }
@@ -300,8 +325,4 @@ void pacman_die(void) {
 void pacman_win(void) {
     stop_bgm(PACMAN_MOVESOUND_ID);
 }
-
-
-
-
 

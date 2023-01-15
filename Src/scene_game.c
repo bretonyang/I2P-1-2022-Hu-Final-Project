@@ -123,9 +123,14 @@ static void checkItem(void) {
     switch (basic_map->map[Grid_y][Grid_x]) {
     case '.':
         pacman_eatItem(pman, '.');
-        basic_map->map[Grid_y][Grid_x] = ' ';   // erase beans from map
-        basic_map->beansCount -= 1;             // Update beans count of map
-        game_main_score += 10;                  // update score
+        basic_map->map[Grid_y][Grid_x] = ' '; // erase beans from map
+        basic_map->beansCount -= 1; // Update beans count of map
+        game_main_score += 10; // update score
+        break;
+    case 'S':
+        pacman_eatItem(pman, 'S');
+        basic_map->map[Grid_y][Grid_x] = ' ';   // erase fruit from map
+        game_main_score += 50; // eating fruit plus 50 points
         break;
     default:
         break;
@@ -144,6 +149,9 @@ static void status_update(void) {
         game_win = true;
     }
 
+    // Check status of pacman
+    pacman_update_status(pman);
+
     // Check status of each ghost
     for (int i = 0; i < GHOST_NUM; i++) {
         if (ghosts[i]->status == GO_IN)
@@ -157,13 +165,9 @@ static void status_update(void) {
         // Uncomment Following Code
 
         // Game over if not cheat_mode and (collision of ghost with pacman)
-        if (
-            !cheat_mode &&
-            RecAreaOverlap(
-                getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
-                getDrawArea(pman->objData, GAME_TICK_CD)
-            )
-        ) {
+        if (!cheat_mode && RecAreaOverlap(getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
+                                          getDrawArea(pman->objData, GAME_TICK_CD))) {
+
             game_log("collide with ghost");
             stop_bgm(gameBGM);
             al_rest(1.0);

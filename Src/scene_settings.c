@@ -21,12 +21,9 @@
 static ALLEGRO_BITMAP* settingsTitle;
 static ALLEGRO_SAMPLE_ID settingsBGM;
 
-static int settingsTitleW;
-static int settingsTitleH;
-static int settingsTextX;
-static int settingsTextY;
-static const int okImgW = 80; // width of the ok button image
-static const int okImgH = 61; // height of the ok button image
+static int settingsTitleW, settingsTitleH;
+static int settingsTextX, settingsTextY;
+static const int okImgW = 80, okImgH = 61; // width and height of the ok button image
 
 // UI components
 static Button* btnOK;
@@ -34,10 +31,8 @@ static Slider* musicSlider;
 static Slider* soundSlider;
 
 // Width and height of track and handle images (in px).
-static const int trackImgW = 400;
-static const int trackImgH = 10;
-static const int handleImgW = 40;
-static const int handleImgH = 40;
+static const int trackImgW = 400, trackImgH = 10;
+static const int handleImgW = 40, handleImgH = 40;
 
 // TODO: More variables and functions that will only be accessed
 // inside this scene. They should all have the 'static' prefix.

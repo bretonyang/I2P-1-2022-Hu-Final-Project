@@ -17,12 +17,9 @@ static ALLEGRO_BITMAP* trophyImg;
 static ALLEGRO_SAMPLE_ID winMusic;
 
 // width and height settings
-static int winTitleW;
-static int winTitleH;
-static int trophyImgW;
-static int trophyImgH;
-static const int btnImgW = 177; // width of button images
-static const int btnImgH = 54; // height of button images
+static int winTitleW, winTitleH;
+static int trophyImgW, trophyImgH;
+static const int btnImgW = 177, btnImgH = 54; // width and height of button images
 
 // Buttons
 static Button* btnRestart; // button to switch to main game scene

@@ -17,8 +17,7 @@
 /* Internal Variables*/
 static ALLEGRO_BITMAP* gameTitle;
 static ALLEGRO_SAMPLE_ID menuBGM;
-static int gameTitleW;
-static int gameTitleH;
+static int gameTitleW, gameTitleH;
 
 // [HACKATHON 3]
 // TARGET : use a clickable button to enter setting scene.

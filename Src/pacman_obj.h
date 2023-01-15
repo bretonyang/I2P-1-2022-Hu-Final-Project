@@ -21,9 +21,11 @@ typedef struct Pacman {
     object objData;
     func_ptr move;
     int speed;
+    bool speedUp;
     bool powerUp;
     ALLEGRO_TIMER* death_anim_counter;
     ALLEGRO_TIMER* win_anim_counter;
+    ALLEGRO_TIMER* speed_up_counter;
     ALLEGRO_BITMAP* move_sprite;
     ALLEGRO_BITMAP* die_sprite;
     ALLEGRO_BITMAP* win_sprite;
@@ -32,9 +34,11 @@ typedef struct Pacman {
 /* Global variables */
 extern const int PMAN_DEATH_ANIM_CD; // Pacman's death animation will be finished at 96 death_anim_counter ticks.
 extern const int PMAN_WIN_ANIM_CD;
+extern const int PMAN_SPEED_UP_CD;
 
 extern Pacman* pacman_create(void);
 extern void pacman_destroy(Pacman* pman);
+extern void pacman_update_status(Pacman* pacman);
 
 extern void pacman_draw(Pacman* pacman);
 extern void pacman_move(Pacman* pacman, Map* M);

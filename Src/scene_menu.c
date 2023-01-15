@@ -8,13 +8,14 @@
 #include <math.h>
 #include "scene_menu_object.h"
 #include "scene_settings.h"
+#include "scene_scores.h"
 #include "scene_game.h"
 #include "scene_menu.h"
 #include "utility.h"
 #include "shared.h"
 
 /* Internal Variables*/
-static ALLEGRO_BITMAP* gameTitle = NULL;
+static ALLEGRO_BITMAP* gameTitle;
 static ALLEGRO_SAMPLE_ID menuBGM;
 static int gameTitleW;
 static int gameTitleH;
@@ -34,10 +35,10 @@ static void init() {
     // [HACKATHON 3-2]
     // TODO: Create button to settings
     //	Uncomment and fill the code below
-    btnSettings = button_create(730, 20, 50, 50, "Assets/settings.png", "Assets/settings2.png");
+    btnSettings = button_create(730, 20, 50, 50, "Assets/scene_menu/settings.png", "Assets/scene_menu/settings2.png");
 
     // Load menu title image and get its width and height
-    gameTitle = load_bitmap("Assets/menu_title.png");
+    gameTitle = load_bitmap("Assets/scene_menu/menu_title.png");
     gameTitleW = al_get_bitmap_width(gameTitle);
     gameTitleH = al_get_bitmap_height(gameTitle);
 
@@ -126,7 +127,7 @@ static void on_key_down(int keycode) {
         break;
     case ALLEGRO_KEY_ESCAPE:
         // Change to settings scene when "ESCAPE" pressed
-        game_change_scene(scene_settings_create());
+        game_change_scene(scene_scores_create());
         break;
     default:
         break;

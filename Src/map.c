@@ -193,11 +193,11 @@ void delete_map(Map* M) {
     // you should free the dynamic allocated part of Map* M at here;
     if (M->map) {
         for (int i = 0; i < M->row_num; i++) {
-            free(M->map[i]);
+            free(M->map[i]); // free each row in map
         }
-        free(M->map);
+        free(M->map); // free 2d array for map
     }
-    free(M);
+    free(M); // free Map object
 }
 
 

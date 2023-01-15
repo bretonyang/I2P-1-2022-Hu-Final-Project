@@ -1,6 +1,7 @@
 // [shared.c]
 // you should define the shared variable declared in the header here.
 
+#include <stdlib.h>
 #include "shared.h"
 #include "utility.h"
 #include "game.h"
@@ -24,6 +25,9 @@ float music_volume = 0.5;
 float effect_volume = 0.5;
 bool gameDone = false;
 
+const int NUM_OF_SCORES = 5;
+ScoreData* scores; // array of high scores
+
 /*
 	A way to accelerate is load assets once.
 	And delete them at the end.
@@ -37,6 +41,8 @@ void shared_init(void) {
     PACMAN_MOVESOUND = load_audio("Assets/Music/pacman-chomp.ogg");
     PACMAN_DEATH_SOUND = load_audio("Assets/Music/pacman_death.ogg");
     PACMAN_WIN_SOUND = load_audio("Assets/Music/pacman_win.ogg");
+
+    scores = load_scores("Assets/high_scores.txt");
 }
 
 void shared_destroy(void) {
@@ -47,4 +53,7 @@ void shared_destroy(void) {
     al_destroy_sample(PACMAN_MOVESOUND);
     al_destroy_sample(PACMAN_DEATH_SOUND);
     al_destroy_sample(PACMAN_WIN_SOUND);
+
+    store_scores(scores, "Assets/high_scores.txt"); // store the new scores before program ended
+    destroy_scores(scores);
 }

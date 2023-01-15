@@ -5,6 +5,7 @@
 #define SCENE_SHARED_H
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
+#include "utility.h"
 
 // TODO: Shared constant variable (without initializing value).
 
@@ -27,6 +28,9 @@ extern int fontSize;
 extern float music_volume;
 extern float effect_volume;
 extern bool gameDone;
+
+extern const int NUM_OF_SCORES;
+extern ScoreData* scores;
 
 // Initialize shared variables and resources.
 // Allows the game to perform any initialization it needs before

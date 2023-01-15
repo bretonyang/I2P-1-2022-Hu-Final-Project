@@ -48,7 +48,8 @@ static void init(void) {
     settingsTextY = SCREEN_H >> 2;
 
     // Create the "OK" button
-    btnOK = button_create((SCREEN_W - okImgW) >> 1, SCREEN_H - 200, okImgW, okImgH, "Assets/ok_button.png", "Assets/ok_button2.png");
+    btnOK = button_create((SCREEN_W - okImgW) >> 1, SCREEN_H - 200, okImgW, okImgH,
+                          "Assets/scene_settings/ok_button.png", "Assets/scene_settings/ok_button2.png");
 
     // Create the music and sound volume slider
     musicSlider = slider_create(settingsTextX + 150,
@@ -57,7 +58,7 @@ static void init(void) {
                                 settingsTextX + 150 + 40 * (music_volume * 10) - (handleImgW >> 1),
                                 settingsTextY + (trackImgH >> 1) - 15,
                                 handleImgW, handleImgH,
-                                40, "Assets/slider_track.png", "Assets/slider_handle.png"
+                                "Assets/scene_settings/slider_track.png", "Assets/scene_settings/slider_handle.png"
                                );
 
     soundSlider = slider_create(settingsTextX + 150,
@@ -66,11 +67,11 @@ static void init(void) {
                                 settingsTextX + 150 + 40 * (effect_volume * 10) - (handleImgW >> 1),
                                 settingsTextY + (trackImgH >> 1) - 15 + 150,
                                 handleImgW, handleImgH,
-                                40, "Assets/slider_track.png", "Assets/slider_handle.png"
+                                "Assets/scene_settings/slider_track.png", "Assets/scene_settings/slider_handle.png"
                                );
 
     // Load title image and get its width and height
-    settingsTitle = load_bitmap("Assets/settings_title.png");
+    settingsTitle = load_bitmap("Assets/scene_settings/settings_title.png");
     settingsTitleW = al_get_bitmap_width(settingsTitle);
     settingsTitleH = al_get_bitmap_height(settingsTitle);
 

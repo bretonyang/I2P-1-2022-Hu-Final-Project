@@ -4,7 +4,7 @@
 #include "utility.h"
 
 
-/* Button utility functions */
+/* Button Utility Functions */
 
 Button* button_create(float x, float y, float w, float h,
                       const char* default_image_path, const char* hovered_image_path) {
@@ -75,11 +75,11 @@ void button_update_hover_state(Button* button, int mouse_x, int mouse_y) {
 }
 
 
-/* Slider utility functions */
+/* Slider Utility Functions */
 
 Slider* slider_create(float track_x, float track_y, float track_w, float track_h,
                       float handle_x, float handle_y, float handle_w, float handle_h,
-                      int diff, const char* track_img_path, const char* handle_img_path) {
+                      const char* track_img_path, const char* handle_img_path) {
 
     Slider* slider = (Slider*)malloc(sizeof(Slider));
     memset(slider, 0, sizeof(Slider));
@@ -99,9 +99,6 @@ Slider* slider_create(float track_x, float track_y, float track_w, float track_h
     slider->handle_body.y = handle_y;
     slider->handle_body.w = handle_w;
     slider->handle_body.h = handle_h;
-
-    // Set up the length of each section of the slider
-    slider->diff = diff;
 
     return slider;
 }
@@ -159,17 +156,5 @@ void slider_update_value(Slider* slider, int mouse_x, float* value) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Dropdown Menu Utility Functions */
 

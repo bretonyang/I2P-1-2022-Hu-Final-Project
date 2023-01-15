@@ -3,11 +3,15 @@
 
 #include "utility.h"
 #include "game.h"
+#include "shared.h"
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_audio.h>
+
 extern uint32_t GAME_TICK;
 extern const uint32_t GAME_TICK_CD;
 const int GridSize = 22;
@@ -15,6 +19,112 @@ float VOLUME = 1.0;
 extern map_offset_x;
 extern map_offset_y;
 extern block_width, block_height;
+
+/**
+ * Load the scores from the given file and return an array of the scores.
+ */
+ScoreData* load_scores(const char* filename) {
+    // Check filename is provided
+    if (!filename) {
+        filename = "Assets/high_scores.txt"; // default filename
+    }
+
+    // Open file and check enough memory to open file
+    FILE* scoresFile = fopen(filename, "r");
+    if (!scoresFile) {
+        game_abort("Error when opening file to read from path: \"%s\"", filename);
+        return NULL;
+    }
+    game_log("Reading scores from file: %s", filename);
+
+    // Create the scores array to store info
+    ScoreData* loadedScores = (ScoreData*)malloc(NUM_OF_SCORES * sizeof(ScoreData));
+    if (!loadedScores) {
+        game_abort("Error when mallocing scores array");
+        return NULL;
+    }
+
+    // Read from file and store in the array
+    for (int i = 0; i < NUM_OF_SCORES; i++) {
+        // Read each row in the file and check the format
+        if (fscanf(scoresFile, "%d %19[^\n]", &loadedScores[i].score, loadedScores[i].date) != 2) {
+            game_abort("Unable to match scores file format");
+            return NULL;
+        }
+//        game_log("%d %s", loadedScores[i].score, loadedScores[i].date);
+    }
+
+    fclose(scoresFile);
+
+    return loadedScores;
+}
+
+/**
+ * Store the new scores to the specified file
+ */
+void store_scores(ScoreData* scores, const char* filename) {
+    // Check filename is provided
+    if (!filename) {
+        game_abort("No filename provided to store the scores");
+        return;
+    }
+
+    // Open file and check enough memory to open file
+    FILE* scoresFile = fopen(filename, "w");
+    if (!scoresFile) {
+        game_abort("Error when opening file to write from path: \"%s\"", filename);
+        return;
+    }
+
+    // Record scores to opened file
+    for (int i = 0; i < NUM_OF_SCORES; i++) {
+//        game_log("%d %s", scores[i].score, scores[i].date);
+        fprintf(scoresFile, "%d %s\n", scores[i].score, scores[i].date);
+    }
+
+    fclose(scoresFile);
+    game_log("Stored high score data to file: %s", filename);
+}
+
+/**
+ * Free the scores array
+ */
+void destroy_scores(ScoreData* scores) {
+    free(scores);
+}
+
+/**
+ * Update the scores array with the newScore object.
+ */
+void update_scores(ScoreData* scores, int newScore) {
+    // Loop through the current scores array and update the
+    ScoreData tmp;
+    int changed = 0;
+    for (int i = 0; i < NUM_OF_SCORES; i++) {
+        if (changed) {
+            ScoreData curData;
+            memcpy(&curData, &scores[i], sizeof(ScoreData));
+            memcpy(&scores[i], &tmp, sizeof(ScoreData));
+            memcpy(&tmp, &curData, sizeof(ScoreData));
+        }
+        else if (newScore >= scores[i].score) {
+            // First store the current data
+            memcpy(&tmp, &scores[i], sizeof(ScoreData));
+
+            // store the new score
+            scores[i].score = newScore;
+
+            // store the date
+            time_t t = time(NULL);
+            struct tm tm = *localtime(&t);
+            // NOTE: sprintf adds the '\0' character
+            sprintf(scores[i].date, "%04d-%02d-%02d %02d:%02d:%02d",
+                    tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+
+            changed = 1;
+        }
+    }
+}
 
 /**
  * Load the given file as an ALLEGRO_SAMPLE and return it.

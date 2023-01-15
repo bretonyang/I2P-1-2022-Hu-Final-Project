@@ -68,7 +68,17 @@ typedef struct bitmapdata {
     int bitmap_h;
 } bitmapdata;
 
+typedef struct ScoreData {
+    int score;
+    char date[20]; // for the format: YYYY-MM-DD HH:MM:SS
+} ScoreData;
+
 //extern const int GridSize;
+
+ScoreData* load_scores(const char* filename);
+void store_scores(ScoreData* scores, const char* filename);
+void destroy_scores(ScoreData* scores);
+void update_scores(ScoreData* scores, int newScore);
 
 void setRecArea(RecArea* RA, float x, float y, float w, float h);
 RecArea getDrawArea(object obj, uint32_t TICK);

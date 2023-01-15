@@ -52,11 +52,11 @@ static void init(void) {
     game_main_score = 0;
 
     // For debugging
-    basic_map = create_map("Assets/map_test.txt");
+//    basic_map = create_map("Assets/map_test.txt");
 
     // [TODO]
     // Create map from .txt file and design your own map !!
-//    basic_map = create_map("Assets/map_custom.txt");
+    basic_map = create_map("Assets/map_custom.txt");
     if (!basic_map) {
         game_abort("error on creating map");
     }
@@ -188,6 +188,9 @@ static void update(void) {
         if (al_get_timer_count(pman->death_anim_counter) >= 2 * PMAN_DEATH_ANIM_CD) {
             al_stop_timer(pman->death_anim_counter);
 
+            // update the scores
+            update_scores(scores, game_main_score);
+
             // switch to menu scene after death animation
             game_change_scene(scene_menu_create());
         }
@@ -200,6 +203,9 @@ static void update(void) {
         // if counter ticks reaches 2*PMAN_WIN_ANIM_CD, then stop timer and change the scene
         if (al_get_timer_count(pman->win_anim_counter) >= 2 * PMAN_WIN_ANIM_CD) {
             al_stop_timer(pman->win_anim_counter);
+
+            // update the scores
+            update_scores(scores, game_main_score);
 
             // switch to win scene
             game_change_scene(scene_win_create());

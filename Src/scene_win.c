@@ -5,6 +5,7 @@
 #include "scene_game.h"
 #include "scene_menu_object.h"
 #include "game.h"
+#include "utility.h"
 #include "share.h"
 
 
@@ -33,16 +34,17 @@ static Button* btnMenu; // button to switch to menu scene
 static void init(void) {
     // Create buttons
     btnRestart = button_create((SCREEN_W >> 1) - btnImgW - 50, 550, btnImgW, btnImgH,
-                               "Assets/restart.png", "Assets/restart2.png");
-    btnMenu = button_create((SCREEN_W >> 1) + 50, 550, btnImgW, btnImgH, "Assets/menu.png", "Assets/menu2.png");
+                               "Assets/scene_win/restart.png", "Assets/scene_win/restart2.png");
+    btnMenu = button_create((SCREEN_W >> 1) + 50, 550, btnImgW, btnImgH,
+                            "Assets/scene_win/menu.png", "Assets/scene_win/menu2.png");
 
     // Load title image
-    winTitle = load_bitmap("Assets/win_title.png");
+    winTitle = load_bitmap("Assets/scene_win/win_title.png");
     winTitleW = al_get_bitmap_width(winTitle);
     winTitleH = al_get_bitmap_height(winTitle);
 
     // Load trophy image
-    trophyImg = load_bitmap("Assets/win_trophy.png");
+    trophyImg = load_bitmap("Assets/scene_win/win_trophy.png");
     trophyImgW = al_get_bitmap_width(trophyImg);
     trophyImgH = al_get_bitmap_height(trophyImg);
 

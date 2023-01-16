@@ -19,7 +19,7 @@ static ALLEGRO_SAMPLE_ID PACMAN_MOVESOUND_ID;
 // totally understand the meaning of speed and function
 // `step()` in `scene_game.c`, also the relationship between
 // `speed`, `GAME_TICK`, `GAME_TICK_CD`, `objData->moveCD`.
-static const int basic_speed = 2;
+static const int basic_speed = 4;
 
 /* Shared variables */
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
@@ -298,6 +298,11 @@ void pacman_eatItem(Pacman* pacman, const char Item) {
     case '.':
         stop_bgm(PACMAN_MOVESOUND_ID);
         PACMAN_MOVESOUND_ID = play_audio(PACMAN_MOVESOUND, effect_volume);
+        break;
+    case 'P':
+        pacman->powerUp = true;
+        stop_bgm(PACMAN_MOVESOUND_ID);
+        PACMAN_MOVESOUND_ID = play_audio(PACMAN_EAT_FRUIT_SOUND, effect_volume);
         break;
     case 'S':
         stop_bgm(PACMAN_MOVESOUND_ID);

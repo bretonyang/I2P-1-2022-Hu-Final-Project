@@ -21,6 +21,7 @@ extern ALLEGRO_FONT* titleFont;
 // audio
 extern ALLEGRO_SAMPLE* themeMusic;
 extern ALLEGRO_SAMPLE* gameMusic_v1;
+extern ALLEGRO_SAMPLE* powerUpMusic;
 extern ALLEGRO_SAMPLE* PACMAN_MOVESOUND;
 extern ALLEGRO_SAMPLE* PACMAN_EAT_FRUIT_SOUND;
 extern ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND;

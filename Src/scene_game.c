@@ -20,6 +20,7 @@
 int game_main_score = 0;
 bool game_over = false;
 bool game_win = false;
+bool ghost_twinkle = false;
 
 /* Internal variables*/
 static ALLEGRO_TIMER* power_up_timer;
@@ -28,28 +29,37 @@ static Pacman* pman;
 static Map* basic_map;
 static Ghost** ghosts;
 static ALLEGRO_SAMPLE_ID gameBGM;
+static ALLEGRO_SAMPLE_ID powerUpBGM;
 static bool debug_mode = false;
 static bool cheat_mode = false;
 
 /* Declare static function prototypes */
 static void init(void);
-static void step(void);
-static void checkItem(void);
-static void status_update(void);
 static void update(void);
 static void draw(void);
-static void printinfo(void);
 static void destroy(void);
 static void on_key_down(int key_code);
 static void on_mouse_down(void);
+
+/* static utility function prototypes */
 static void render_init_screen(void);
+static void step(void);
+static void checkItem(void);
+static void status_update(void);
+static void power_up_mode_setup(void);
+static void game_over_update(void);
+static void game_win_update(void);
+static void power_up_update(void);
+static void printinfo(void);
 static void draw_hitboxes(void);
+static void stop_all_bgm(void);
 
 
 static void init(void) {
     game_over = false;
     game_win = false;
     game_main_score = 0;
+    ghost_twinkle = 0;
 
     // For debugging
 //    basic_map = create_map("Assets/map_test.txt");
@@ -94,7 +104,7 @@ static void init(void) {
         game_abort("Error creating timer\n");
 
     // Play game scene bgm
-    stop_bgm(gameBGM);
+    stop_all_bgm();
     gameBGM = play_bgm(gameMusic_v1, music_volume);
 
     return ;
@@ -123,14 +133,22 @@ static void checkItem(void) {
     switch (basic_map->map[Grid_y][Grid_x]) {
     case '.':
         pacman_eatItem(pman, '.');
-        basic_map->map[Grid_y][Grid_x] = ' '; // erase beans from map
-        basic_map->beansCount -= 1; // Update beans count of map
-        game_main_score += 10; // update score
+        basic_map->map[Grid_y][Grid_x] = ' ';
+        basic_map->beansCount -= 1;
+        game_main_score += 10;
+        break;
+    case 'P':
+        // eat item
+        pacman_eatItem(pman, 'P');
+        basic_map->map[Grid_y][Grid_x] = ' ';
+        game_main_score += 100;
+
+        power_up_mode_setup();
         break;
     case 'S':
         pacman_eatItem(pman, 'S');
-        basic_map->map[Grid_y][Grid_x] = ' ';   // erase fruit from map
-        game_main_score += 50; // eating fruit plus 50 points
+        basic_map->map[Grid_y][Grid_x] = ' ';
+        game_main_score += 50;
         break;
     default:
         break;
@@ -144,12 +162,12 @@ static void status_update(void) {
     // Check if all beans are eaten
     if (!basic_map->beansCount) {
         game_log("All beans are eaten");
-        stop_bgm(gameBGM);
+        stop_all_bgm();
         pacman_win();
         game_win = true;
     }
 
-    // Check status of pacman
+    // Update status of pacman
     pacman_update_status(pman);
 
     // Check status of each ghost
@@ -164,65 +182,42 @@ static void status_update(void) {
         // You should have some branch here if you want to implement power bean mode.
         // Uncomment Following Code
 
-        // Game over if not cheat_mode and (collision of ghost with pacman)
-        if (!cheat_mode && RecAreaOverlap(getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
+        // Check if pacman collide with ghost
+        if (RecAreaOverlap(getDrawArea(ghosts[i]->objData, GAME_TICK_CD),
                                           getDrawArea(pman->objData, GAME_TICK_CD))) {
 
-            game_log("collide with ghost");
-            stop_bgm(gameBGM);
-            al_rest(1.0);
-            pacman_die();
-            game_over = true;
-            break;
+            // game over
+            if (!cheat_mode && ghosts[i]->status == FREEDOM) {
+                game_log("collide with ghost");
+                stop_all_bgm();
+                al_rest(1.0);
+                pacman_die();
+                game_over = true;
+                break;
+            }
+            // eats a ghost
+            else if (ghosts[i]->status == FLEE) {
+                game_log("pacman eats a ghost");
+                ghost_collided(ghosts[i]);
+                game_main_score += 200;
+                break;
+            }
         }
     }
 }
 
 static void update(void) {
     if (game_over) {
-        /*
-        	[TODO]
-        	start pman->death_anim_counter and schedule a game-over event (e.g change scene to menu) after Pacman's death animation finished
-        	game_change_scene(...);
-        */
-        // start the death counter timer to create death animation
-        al_start_timer(pman->death_anim_counter);
-
-        // Change scene 2*PMAN_DEATH_ANIM_CD ticks after Pacman's death animation.
-        if (al_get_timer_count(pman->death_anim_counter) >= 2 * PMAN_DEATH_ANIM_CD) {
-            al_stop_timer(pman->death_anim_counter);
-
-            // update the scores
-            update_scores(scores, game_main_score);
-
-            // switch to menu scene after death animation
-            game_change_scene(scene_menu_create());
-        }
+        game_over_update();
         return;
     }
     else if (game_win) {
-        // start the win counter timer to create victory animation
-        al_start_timer(pman->win_anim_counter);
-
-        // if counter ticks reaches 2*PMAN_WIN_ANIM_CD, then stop timer and change the scene
-        if (al_get_timer_count(pman->win_anim_counter) >= 2 * PMAN_WIN_ANIM_CD) {
-            al_stop_timer(pman->win_anim_counter);
-
-            // update the scores
-            update_scores(scores, game_main_score);
-
-            // switch to win scene
-            game_change_scene(scene_win_create());
-        }
-        // We want to keep moving the pacman to eat the last bean and create winning animation.
-        // But we don't want to update the status and ghosts, so we use this extra else statement.
-        else {
-            step();
-            checkItem();
-            pacman_move(pman, basic_map);
-        }
-
+        game_win_update();
         return;
+    }
+
+    if (pman->powerUp) {
+        power_up_update();
     }
 
     // Update the game
@@ -239,11 +234,6 @@ static void draw(void) {
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
-    //	[TODO]
-    //	Draw scoreboard, something you may need is sprinf();
-    /*
-    	al_draw_text(...);
-    */
     // Draw scoreboard
     al_draw_textf(
         menuFont,
@@ -271,36 +261,8 @@ static void draw(void) {
 
 }
 
-static void draw_hitboxes(void) {
-    RecArea pmanHB = getDrawArea(pman->objData, GAME_TICK_CD);
-    al_draw_rectangle(
-        pmanHB.x, pmanHB.y,
-        pmanHB.x + pmanHB.w, pmanHB.y + pmanHB.h,
-        al_map_rgb_f(1.0, 0.0, 0.0), 2
-    );
-
-    for (int i = 0; i < GHOST_NUM; i++) {
-        RecArea ghostHB = getDrawArea(ghosts[i]->objData, GAME_TICK_CD);
-        al_draw_rectangle(
-            ghostHB.x, ghostHB.y,
-            ghostHB.x + ghostHB.w, ghostHB.y + ghostHB.h,
-            al_map_rgb_f(1.0, 0.0, 0.0), 2
-        );
-    }
-
-}
-
-static void printinfo(void) {
-    game_log("pacman:");
-    game_log("coord: %d, %d", pman->objData.Coord.x, pman->objData.Coord.y);
-    game_log("PreMove: %d", pman->objData.preMove);
-    game_log("NextTryMove: %d", pman->objData.nextTryMove);
-    game_log("Speed: %f", pman->speed);
-}
-
-
 static void destroy(void) {
-    stop_bgm(gameBGM);
+    stop_all_bgm();
     /*
     	[TODO]
     	free map array, Pacman, ghosts and timers
@@ -372,7 +334,6 @@ static void render_init_screen(void) {
 
     al_flip_display();
     al_rest(2.0);
-
 }
 // Functions without 'static', 'extern' prefixes is just a normal
 // function, they can be accessed by other files using 'extern'.
@@ -393,4 +354,108 @@ Scene scene_main_create(void) {
     // TODO: Register more event callback functions such as keyboard, mouse, ...
     game_log("Start scene created");
     return scene;
+}
+
+
+
+/* ************************** */
+/* Internal Utility Functions */
+/* ************************** */
+
+static void power_up_mode_setup(void) {
+    al_set_timer_count(power_up_timer, 0);
+    al_start_timer(power_up_timer);
+
+    stop_all_bgm();
+    powerUpBGM = play_bgm(powerUpMusic, music_volume);
+
+    for (int i = 0; i < GHOST_NUM; i++) {
+        ghost_toggle_FLEE(ghosts[i], true);
+    }
+}
+
+static void game_over_update(void) {
+    al_start_timer(pman->death_anim_counter);
+
+    // Change scene after 2 seconds
+    if (al_get_timer_count(pman->death_anim_counter) >= 2 * PMAN_DEATH_ANIM_CD) {
+        al_stop_timer(pman->death_anim_counter);
+
+        update_scores(scores, game_main_score);
+
+        game_change_scene(scene_menu_create());
+    }
+}
+
+static void game_win_update(void) {
+    al_start_timer(pman->win_anim_counter);
+
+    // Change scene after 2 seconds
+    if (al_get_timer_count(pman->win_anim_counter) >= 2 * PMAN_WIN_ANIM_CD) {
+        al_stop_timer(pman->win_anim_counter);
+
+        update_scores(scores, game_main_score);
+
+        game_change_scene(scene_win_create());
+    }
+    // We want to keep moving the pacman to eat the last bean and create winning animation.
+    // But we don't want to update the status and ghosts, so we use this extra else statement.
+    else {
+        step();
+        checkItem();
+        pacman_move(pman, basic_map);
+    }
+}
+
+static void power_up_update(void) {
+    // ghost start twinkle
+    if (al_get_timer_count(power_up_timer) == 7) {
+        ghost_twinkle = true;
+    }
+    // power up time finished
+    else if (al_get_timer_count(power_up_timer) == power_up_duration) {
+        pman->powerUp = false;
+        ghost_twinkle = false;
+
+        for (int i = 0; i < GHOST_NUM; i++) {
+            ghost_toggle_FLEE(ghosts[i], false);
+        }
+
+        stop_all_bgm();
+        gameBGM = play_bgm(gameMusic_v1, music_volume);
+
+        al_stop_timer(power_up_timer);
+    }
+}
+
+static void draw_hitboxes(void) {
+    RecArea pmanHB = getDrawArea(pman->objData, GAME_TICK_CD);
+    al_draw_rectangle(
+        pmanHB.x, pmanHB.y,
+        pmanHB.x + pmanHB.w, pmanHB.y + pmanHB.h,
+        al_map_rgb_f(1.0, 0.0, 0.0), 2
+    );
+
+    for (int i = 0; i < GHOST_NUM; i++) {
+        RecArea ghostHB = getDrawArea(ghosts[i]->objData, GAME_TICK_CD);
+        al_draw_rectangle(
+            ghostHB.x, ghostHB.y,
+            ghostHB.x + ghostHB.w, ghostHB.y + ghostHB.h,
+            al_map_rgb_f(1.0, 0.0, 0.0), 2
+        );
+    }
+
+}
+
+static void printinfo(void) {
+    game_log("pacman:");
+    game_log("coord: %d, %d", pman->objData.Coord.x, pman->objData.Coord.y);
+    game_log("PreMove: %d", pman->objData.preMove);
+    game_log("NextTryMove: %d", pman->objData.nextTryMove);
+    game_log("Speed: %f", pman->speed);
+}
+
+static void stop_all_bgm(void) {
+    stop_bgm(powerUpBGM);
+    stop_bgm(gameBGM);
 }

@@ -1,7 +1,9 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_primitives.h>
+#include <math.h>
 #include "ghost.h"
 #include "game.h"
+#include "scene_game.h"
 #include "map.h"
 #include "pacman_obj.h"
 
@@ -93,12 +95,6 @@ void ghost_draw(Ghost* ghost) {
     // getDrawArea return the drawing RecArea defined by objData and GAME_TICK_CD
     RecArea drawArea = getDrawArea(ghost->objData, GAME_TICK_CD);
 
-    //Draw default image
-//	al_draw_scaled_bitmap(ghost->move_sprite, 0, 0, 16, 16,
-//		drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
-//		draw_region, draw_region, 0
-//  );
-
     /*
     	[TODO]
     	Draw ghost according to its status
@@ -119,17 +115,51 @@ void ghost_draw(Ghost* ghost) {
     int bitmap_x_offset = 0;
     // [TODO] below is for animation usage, change the sprite you want to use.
     if (ghost->status == FLEE) {
-        /*
-        	al_draw_scaled_bitmap(...)
-        */
+        if (ghost_twinkle) {
+            bitmap_x_offset = 32 * (ghost->objData.moveCD * 2 / GAME_TICK_CD);
+        }
+
+        // draw 2 different motion images per GAME_TICK_CD
+        if (ghost->objData.moveCD * 2 / GAME_TICK_CD) { // == moveCD / (GAME_TICK_CD / 2)
+            al_draw_scaled_bitmap(ghost->flee_sprite, bitmap_x_offset, 0,
+                                  16, 16,
+                                  drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                                  draw_region, draw_region, 0
+                                 );
+        }
+        else {
+            al_draw_scaled_bitmap(ghost->flee_sprite, bitmap_x_offset + 16, 0,
+                                  16, 16,
+                                  drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                                  draw_region, draw_region, 0
+                                 );
+        }
     }
     else if (ghost->status == GO_IN) {
-        /*
-        switch (ghost->objData.facing)
-        {
+        // decide which image to apply in bitmap
+        // NOTE: each bitmap is 16px wide.
+        switch (ghost->objData.facing) {
+        case RIGHT:
+            bitmap_x_offset = 0;
+            break;
         case LEFT:
-        	...
-        */
+            bitmap_x_offset = 16;
+            break;
+        case UP:
+            bitmap_x_offset = 32;
+            break;
+        case DOWN:
+            bitmap_x_offset = 48;
+            break;
+        default:
+            break;
+        }
+
+        al_draw_scaled_bitmap(ghost->dead_sprite, bitmap_x_offset, 0,
+                                  16, 16,
+                                  drawArea.x + fix_draw_pixel_offset_x, drawArea.y + fix_draw_pixel_offset_y,
+                                  draw_region, draw_region, 0
+                                 );
     }
     else {
         // decide which image to apply in bitmap
@@ -167,9 +197,11 @@ void ghost_draw(Ghost* ghost) {
     }
 
 }
+
 void ghost_NextMove(Ghost* ghost, Directions next) {
     ghost->objData.nextTryMove = next;
 }
+
 void printGhostStatus(GhostStatus S) {
 
     switch(S) {
@@ -194,6 +226,7 @@ void printGhostStatus(GhostStatus S) {
         break;
     }
 }
+
 bool ghost_movable(Ghost* ghost, Map* M, Directions targetDirec, bool room) {
     // [HACKATHON 2-3]
     // TODO: Determine if the current direction is movable.
@@ -247,12 +280,23 @@ void ghost_toggle_FLEE(Ghost* ghost, bool setFLEE) {
     			..
     	}
     */
+    if (setFLEE) {
+        if (ghost->status == FREEDOM) {
+            ghost->status = FLEE;
+            ghost->speed = basic_speed / 2;
+        }
+    }
+    else {
+        if (ghost->status == FLEE) {
+            ghost->status = FREEDOM;
+        }
+    }
 }
 
 void ghost_collided(Ghost* ghost) {
     if (ghost->status == FLEE) {
         ghost->status = GO_IN;
-        ghost->speed = 4;
+        ghost->speed = 2 * basic_speed;
     }
 }
 
@@ -273,7 +317,7 @@ void ghost_move_script_GO_OUT(Ghost* ghost, Map* M) {
     else
         ghost->status = FREEDOM;
 }
-void ghost_move_script_FLEE(Ghost* ghost, Map* M, const Pacman * const pacman) {
+void ghost_move_script_FLEE(Ghost* ghost, Map* M, const Pacman* const pacman) {
     // [TODO]
     Directions shortestDirection = shortest_path_direc(M, ghost->objData.Coord.x, ghost->objData.Coord.y, pacman->objData.Coord.x, pacman->objData.Coord.y);
     // Description:
@@ -281,6 +325,77 @@ void ghost_move_script_FLEE(Ghost* ghost, Map* M, const Pacman * const pacman) {
     // To achieve this, think in this way. We first get the direction to shortest path to pacman, call it K (K is either UP, DOWN, RIGHT or LEFT).
     // Then we choose other available direction rather than direction K.
     // In this way, ghost will escape from pacman.
+    int dx = ghost->objData.Coord.x - pacman->objData.Coord.x;
+    int dy = ghost->objData.Coord.y - pacman->objData.Coord.y;
+    bool isFar = (dx * dx + dy * dy) >= 196; // 14 block away
 
+    // Find the direction of the ghost's previous position
+//    Directions prevDirec;
+//    switch (ghost->objData.preMove) {
+//    case UP:
+//        prevDirec = DOWN;
+//        break;
+//    case DOWN:
+//        prevDirec = UP;
+//        break;
+//    case LEFT:
+//        prevDirec = RIGHT;
+//        break;
+//    case RIGHT:
+//        prevDirec = LEFT;
+//        break;
+//    default:
+//        prevDirec = NONE;
+//        break;
+//    }
+
+    static Directions proba[4]; // possible movements
+    int cnt = 0; // count of possible movements
+
+    // Use the normal direction choosing method
+    if (isFar) {
+        Directions prevDirec;
+        switch (ghost->objData.preMove) {
+        case UP:
+            prevDirec = DOWN;
+            break;
+        case DOWN:
+            prevDirec = UP;
+            break;
+        case LEFT:
+            prevDirec = RIGHT;
+            break;
+        case RIGHT:
+            prevDirec = LEFT;
+            break;
+        default:
+            prevDirec = NONE;
+            break;
+        }
+
+        static Directions proba[4]; // possible movements
+        int cnt = 0; // count of possible movements
+        for (Directions i = 1; i <= 4; i++) {
+            if (i != prevDirec && ghost_movable(ghost, M, i, true)) // `true` argument means shouldn't walk into room
+                proba[cnt++] = i;
+        }
+
+        if (!cnt)
+            ghost_NextMove(ghost, prevDirec); // move backwards if no possible movements available
+        else
+            ghost_NextMove(ghost, proba[generateRandomNumber(0, cnt - 1)]);
+    }
+    else {
+        for (Directions i = 1; i <= 4; i++) {
+        if (i != shortestDirection && ghost_movable(ghost, M, i, true)) // `true` argument means shouldn't walk into room
+                proba[cnt++] = i;
+        }
+
+        if (!cnt) {
+            ghost_NextMove(ghost, shortestDirection);
+        }
+        else
+            ghost_NextMove(ghost, proba[generateRandomNumber(0, cnt - 1)]); // randomly choose a possible moving direction
+    }
 }
 

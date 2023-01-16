@@ -121,6 +121,18 @@ static void on_mouse_down(void) {
     }
 }
 
+static void on_key_down(int keycode) {
+
+    switch (keycode) {
+    case ALLEGRO_KEY_ESCAPE:
+        // Close scores scene and switch to menu scene when "ESCAPE" is pressed
+        game_change_scene(scene_menu_create());
+        break;
+    default:
+        break;
+    }
+}
+
 
 /* Global function */
 
@@ -137,6 +149,7 @@ Scene scene_scores_create(void) {
     scene.destroy = &destroy;
     scene.on_mouse_move = &on_mouse_move;
     scene.on_mouse_down = &on_mouse_down;
+    scene.on_key_down = &on_key_down;
 
     game_log("High scores scene created");
     return scene;

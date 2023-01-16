@@ -17,6 +17,7 @@ ALLEGRO_FONT* titleFont = NULL;
 // Audio
 ALLEGRO_SAMPLE* themeMusic = NULL;
 ALLEGRO_SAMPLE* gameMusic_v1 = NULL;
+ALLEGRO_SAMPLE* powerUpMusic = NULL;
 ALLEGRO_SAMPLE* PACMAN_MOVESOUND = NULL;
 ALLEGRO_SAMPLE* PACMAN_EAT_FRUIT_SOUND = NULL;
 ALLEGRO_SAMPLE* PACMAN_DEATH_SOUND = NULL;
@@ -42,8 +43,9 @@ void shared_init(void) {
     titleFont = load_font("Assets/Minecraft.ttf", titleFontSize);
     themeMusic = load_audio("Assets/Music/original_theme.ogg");
     gameMusic_v1 = load_audio("Assets/Music/ghost_siren_v1.ogg");
+    powerUpMusic = load_audio("Assets/Music/pacman_powerup.ogg");
     PACMAN_MOVESOUND = load_audio("Assets/Music/pacman-chomp.ogg");
-    PACMAN_EAT_FRUIT_SOUND = load_audio("Assets/Music/pacman_eatghost.ogg");
+    PACMAN_EAT_FRUIT_SOUND = load_audio("Assets/Music/pacman_eatfruit.ogg");
     PACMAN_DEATH_SOUND = load_audio("Assets/Music/pacman_death.ogg");
     PACMAN_WIN_SOUND = load_audio("Assets/Music/pacman_win.ogg");
 
@@ -56,6 +58,7 @@ void shared_destroy(void) {
     al_destroy_font(titleFont);
     al_destroy_sample(themeMusic);
     al_destroy_sample(gameMusic_v1);
+    al_destroy_sample(powerUpMusic);
     al_destroy_sample(PACMAN_MOVESOUND);
     al_destroy_sample(PACMAN_EAT_FRUIT_SOUND);
     al_destroy_sample(PACMAN_DEATH_SOUND);

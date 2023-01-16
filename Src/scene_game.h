@@ -8,4 +8,9 @@
 
 Scene scene_main_create(void);
 
+extern int game_main_score;
+extern bool game_over;
+extern bool game_win;
+extern bool ghost_twinkle;
+
 #endif

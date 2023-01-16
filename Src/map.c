@@ -334,7 +334,6 @@ static void draw_speed_fruit(Map* M, const int row, const int col) {
                           block_width, block_height, 0);
 }
 
-
 bool is_wall_block(Map* M, int index_x, int index_y) {
     if (index_x < 0 || index_x >= M->col_num || index_y < 0 || index_y >= M->row_num)
         return true;

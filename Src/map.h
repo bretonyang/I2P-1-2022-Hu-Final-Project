@@ -7,7 +7,7 @@
 
 /* Global variables */
 extern const int block_width,  block_height;
-extern const int map_offset_x, map_offset_y ;
+extern const int map_offset_x, map_offset_y;
 
 typedef struct Map {
     int row_num, col_num;

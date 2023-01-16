@@ -327,7 +327,7 @@ void ghost_move_script_FLEE(Ghost* ghost, Map* M, const Pacman* const pacman) {
     // In this way, ghost will escape from pacman.
     int dx = ghost->objData.Coord.x - pacman->objData.Coord.x;
     int dy = ghost->objData.Coord.y - pacman->objData.Coord.y;
-    bool isFar = (dx * dx + dy * dy) >= 196; // 14 block away
+    bool isFar = (dx * dx + dy * dy) >= 100; // 10 block away
 
     // Find the direction of the ghost's previous position
 //    Directions prevDirec;

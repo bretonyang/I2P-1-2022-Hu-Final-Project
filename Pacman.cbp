@@ -102,6 +102,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="Src/scene_menu_object.h" />
+		<Unit filename="Src/scene_scores.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Src/scene_scores.h" />
 		<Unit filename="Src/scene_settings.c">
 			<Option compilerVar="CC" />
 		</Unit>
